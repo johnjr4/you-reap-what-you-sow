@@ -25,7 +25,7 @@ function DetailView(props: {pokemon: PokemonObject[]})  {
                 <button onClick={() =>{ navigate('/details/' + ((Number(id) + 903) % 905 + 1)  ) }}>{'<<<'}</button>
                 <button onClick={() =>{ navigate('/details/' + ((Number(id)) % 905 + 1))}}>{'>>>'}</button>
             </div>
-            <img src={pokemon[Number(id) - 1].img} alt="Pokemon Image">
+            <img src={pokemon[Number(id) - 1].img} alt="Pokemon">
             </img>
 
             <div className={style.details}>
