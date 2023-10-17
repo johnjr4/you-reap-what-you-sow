@@ -132,12 +132,14 @@ h3 {
 .panel li{
     float:left;
     width: auto;
-    margin: 0px 0px 10px 0px;
+    margin: 0px 0px 0px 0px;
 }
 
-.panel a{
+.panel button{
     // width:auto;
-
+    font-size: medium;
+    box-shadow:none;
+    border:none;
     background-color: $secondary-color;
     // width: 500px;
     // margin-top: 10px;
@@ -149,7 +151,7 @@ h3 {
     background-color: $tertiary-color;
 }
 
-.selected a{
+.selected button{
     background-color: $tertiary-color;
 }
 

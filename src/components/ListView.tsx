@@ -31,7 +31,7 @@ function ListView(props: {pokemon: PokemonObject[]})  {
             
             <label className={style.dropDown}>
                 Sort by:   
-                <select name="order" onChange={(e)=>setSortBy(e.target.value =="attack")}>
+                <select name="order" onChange={(e)=>setSortBy(e.target.value === "attack")}>
                     <option value="" >Pokedex Entry Number</option>
                     <option value="attack" >Attack Power</option>
                 </select>
@@ -62,7 +62,7 @@ function pokemonOrder(props: {pokemon : PokemonObject[], query: string, reverse:
     const pokemon = props.pokemon;
     const list =pokemon.filter((poke : PokemonObject) => 
     poke.species.includes(props.query) ||
-    poke.id == Number(props.query) ||
+    poke.id === Number(props.query) ||
     poke.type0.includes(props.query) ||
     poke.type1.includes(props.query));
 
@@ -88,9 +88,9 @@ function ListItem(props: {pokemon : PokemonObject}) {
                 <Link className={style.listLink} to={'details/' + pokemon.id}>
                 <h5>{pokemon.species}</h5>
                 <h3> # {pokemon.id}</h3>
-                <p>{pokemon.type0} {pokemon.type1 != "" ? ', '+ pokemon.type1 : ''}</p>
+                <p>{pokemon.type0} {pokemon.type1 !== "" ? ', '+ pokemon.type1 : ''}</p>
 
-                <img src={pokemon.img} >
+                <img src={pokemon.img} alt="poemonImage" >
 
                 </img>
                 </Link>

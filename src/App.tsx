@@ -3,7 +3,7 @@ import ListView from './components/ListView';
 import GalleryView from './components/GalleryView';
 import DetailView from './components/DetailView';
 import axios from 'axios';
-import {BrowserRouter, useSearchParams, Routes, Route, Link} from 'react-router-dom';
+import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import './App.scss';
 
 
@@ -18,7 +18,6 @@ type PokemonObject = {
 
 function App() {
   const [isLoading, setLoading] = useState(true);
-  // const [queryParameters] = useSearchParams()
 
   const [pokemonObjs, setPokemonObjects] = useState<PokemonObject[]>([])
   

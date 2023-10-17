@@ -22,10 +22,10 @@ function GalleryView(props: {pokemon: PokemonObject[]})  {
         <div>
             <div className={style.panel}>
             <ul> 
-                {Types.map((type : string) => <li className={ type == selectedTypes[0] || type == selectedTypes[1] ? style.selected : ''} ><a onClick={() => {
-                    if (type == selectedTypes[0]) {setTypes(['', selectedTypes[1]])}
-                    else if (type == selectedTypes[1]) {setTypes(['', selectedTypes[0]])}
-                    else setTypes([selectedTypes[1], type]);}}>{type}</a></li>)}
+                {Types.map((type : string) => <li className={ type === selectedTypes[0] || type === selectedTypes[1] ? style.selected : ''}> <button onClick={() => {
+                    if (type === selectedTypes[0]) {setTypes(['', selectedTypes[1]])}
+                    else if (type === selectedTypes[1]) {setTypes(['', selectedTypes[0]])}
+                    else setTypes([selectedTypes[1], type]);}}> {type}</button></li>)}
             </ul>
             </div>
 
@@ -48,7 +48,7 @@ function pokemonOrder(props: {pokemon : PokemonObject[], selectedTypes : string[
     );
     if (list.length > 0) 
     return list.map((mon)=> {
-        return <Link className={style.invisible} to={{pathname: "/details/" + mon.id}}> <img src={mon.img}/> </Link>
+        return <Link className={style.invisible} to={{pathname: "/details/" + mon.id}}> <img src={mon.img} alt="pokemon_image"/> </Link>
     })
 
     return <p>A Pokemon with this typing does not exist.</p>

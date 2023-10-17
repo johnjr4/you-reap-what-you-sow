@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import "../style/List.module.scss"
 import style from "../style/List.module.scss"
 import {useParams, useNavigate} from 'react-router-dom'
@@ -25,12 +25,12 @@ function DetailView(props: {pokemon: PokemonObject[]})  {
                 <button onClick={() =>{ navigate('/details/' + ((Number(id) + 903) % 905 + 1)  ) }}>{'<<<'}</button>
                 <button onClick={() =>{ navigate('/details/' + ((Number(id)) % 905 + 1))}}>{'>>>'}</button>
             </div>
-            <img src={pokemon[Number(id) - 1].img}>
+            <img src={pokemon[Number(id) - 1].img} alt="Pokemon Image">
             </img>
 
             <div className={style.details}>
                 <h3>#{pokemon[Number(id) - 1].id}: {pokemon[Number(id) - 1].species}</h3>
-                <p>{pokemon[Number(id) - 1].type0} {pokemon[Number(id) - 1].type1 != "" ? ', '+ pokemon[Number(id) - 1].type1 : ''}</p>
+                <p>{pokemon[Number(id) - 1].type0} {pokemon[Number(id) - 1].type1 !== "" ? ', '+ pokemon[Number(id) - 1].type1 : ''}</p>
                 <p>Attack Power: {pokemon[Number(id) - 1].attack}</p>
             </div>
             
