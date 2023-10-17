@@ -1,0 +1,61 @@
+@import './style/variables.scss';
+body{
+  background-color: $primary-color;
+}
+
+.details {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.navbar ul {
+  display: flex;
+  position: relative;
+  align-self: center;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-inline-start: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  width: max(90%);
+}
+
+.App {
+  text-align: center;
+
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+
+.App-link {
+  color: $secondary-color;
+}
+
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+  text-align: center;
+}
+
+
+
+.navbar a{
+  // background-color: beige;
+  bottom: 0;
+  
+  float: left;
+  color: black;
+  padding: 5px 30px;
+}
+
+li {
+  list-style: none;
+}
+
