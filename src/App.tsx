@@ -67,8 +67,8 @@ function App() {
       <div className="navbar">
         <nav>
           <ul>
-            <li><Link to="/">List</Link></li>
-            <li><Link to="/gallery">Gallery</Link></li>
+            <li><Link to="/mp2/">List</Link></li>
+            <li><Link to="/mp2/gallery">Gallery</Link></li>
           </ul>
         </nav>
       </div>
