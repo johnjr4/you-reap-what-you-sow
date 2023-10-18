@@ -22,7 +22,7 @@ function App() {
   const [pokemonObjs, setPokemonObjects] = useState<PokemonObject[]>([])
   
   useEffect(() => {
-    axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=905`)
+    axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=649`)
     .then( async response => {
         const pokePromise = response.data.results.map((mon : {name: string}) =>
      
@@ -52,7 +52,7 @@ function App() {
 
   if(isLoading) {
     return (<div className="App"> 
-      <h1>Pokemon Gen 1-8</h1>
+      <h1>Pokemon Gen 1-5</h1>
       <p>Loading...</p>
     </div>)
   }
@@ -60,7 +60,7 @@ function App() {
     
 
     <div className="App">
-      <h1>Pokemon Gen 1-8</h1>
+      <h1>Pokemon Gen 1-5</h1>
 
 
       <BrowserRouter>
