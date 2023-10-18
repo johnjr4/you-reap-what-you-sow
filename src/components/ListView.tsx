@@ -85,7 +85,7 @@ function ListItem(props: {pokemon : PokemonObject}) {
     const pokemon = props.pokemon
     return (
         <div className={style.list}>
-                <Link className={style.listLink} to={'details/' + pokemon.id}>
+                <Link className={style.listLink} to={'/details/' + pokemon.id}>
                 <h5>{pokemon.species}</h5>
                 <h3> # {pokemon.id}</h3>
                 <p>{pokemon.type0} {pokemon.type1 !== "" ? ', '+ pokemon.type1 : ''}</p>

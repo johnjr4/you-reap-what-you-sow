@@ -74,11 +74,11 @@ function App() {
       </div>
 
         <Routes>
-          <Route path="/" element={<ListView pokemon={pokemonObjs}/>}/>
-          <Route path="/gallery" element={<GalleryView pokemon={pokemonObjs}/>}/>
+          <Route path="/mp2/" element={<ListView pokemon={pokemonObjs}/>}/>
+          <Route path="/mp2/gallery" element={<GalleryView pokemon={pokemonObjs}/>}/>
             
 
-            <Route path="/details/:id" element={<DetailView pokemon={pokemonObjs}/>}></Route>
+            <Route path="/mp2/details/:id" element={<DetailView pokemon={pokemonObjs}/>}></Route>
 
         </Routes>
       </BrowserRouter>

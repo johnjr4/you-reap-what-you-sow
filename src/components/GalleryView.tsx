@@ -48,7 +48,7 @@ function pokemonOrder(props: {pokemon : PokemonObject[], selectedTypes : string[
     );
     if (list.length > 0) 
     return list.map((mon)=> {
-        return <Link className={style.invisible} to={{pathname: "/details/" + mon.id}}> <img src={mon.img} alt="pokemon_image"/> </Link>
+        return <Link className={style.invisible} to={{pathname: "/mp2/details/" + mon.id}}> <img src={mon.img} alt="pokemon_image"/> </Link>
     })
 
     return <p>A Pokemon with this typing does not exist.</p>
