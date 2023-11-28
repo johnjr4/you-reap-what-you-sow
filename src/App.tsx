@@ -10,6 +10,7 @@ import PlantDetail from './pages/PlantDetail.tsx';
 import Layout from './components/Layout.tsx';
 
 function App() {
+  
   return (
     <div className="App">
       <Routes>
