@@ -1,0 +1,4 @@
+GET https://perenual.com/api/species/details/100?key=sk-cxT3656660d9efa683177
+
+
+
