@@ -3,18 +3,17 @@ import {Link} from 'react-router-dom'
 import "../style/List.module.scss"
 import style from "../style/List.module.scss"
 
-type PokemonObject = {
-    species: string;
-    img: string;
-    id: number;
-    type0: string;
-    type1: string;
-    attack: number;
+type PlantObject = {
+    id: Number,
+    common_name: String,
+    scientific_name: String,
+    default_image: any,
   }
+  
 
 
-function ListView(props: {pokemon: PokemonObject[]})  {
-    const pokemon = props.pokemon
+function ListView(props: {plants: PlantObject[]})  {
+    const plants = props.plants
 
     const [query, setQuery] = useState("");
     const [reverse, setReverse] = useState(false)
@@ -51,25 +50,21 @@ function ListView(props: {pokemon: PokemonObject[]})  {
             <div className={style.listWrap}>
 
             <ul>
-                {pokemonOrder({pokemon, query, reverse, sortByAttack})}
+                {pokemonOrder({pokemon: plants, query, reverse, sortByAttack})}
             </ul>
             </div>
         </div>
     )
 }
 
-function pokemonOrder(props: {pokemon : PokemonObject[], query: string, reverse: boolean, sortByAttack: boolean}) {
+function pokemonOrder(props: {pokemon : PlantObject[], query: string, reverse: boolean, sortByAttack: boolean}) {
     const pokemon = props.pokemon;
-    const list =pokemon.filter((poke : PokemonObject) => 
-    poke.species.includes(props.query) ||
+    const list =pokemon.filter((poke : PlantObject) => 
+    poke.common_name.includes(props.query) ||
     poke.id === Number(props.query) ||
-    poke.type0.includes(props.query) ||
-    poke.type1.includes(props.query));
+    poke.scientific_name.includes(props.query));
 
-    if (props.sortByAttack) {
-        list.sort((a,b) => a.attack - b.attack);
-    }
-
+  
     if (props.reverse) {
         list.reverse();
     }
@@ -81,19 +76,20 @@ function pokemonOrder(props: {pokemon : PokemonObject[], query: string, reverse:
 
 }
 
-function ListItem(props: {pokemon : PokemonObject}) {
+function ListItem(props: {pokemon : PlantObject}) {
     const pokemon = props.pokemon
     return (
         <div className={style.list}>
-                <Link className={style.listLink} to={'/mp2/details/' + pokemon.id}>
-                <h5>{pokemon.species}</h5>
-                <h3> # {pokemon.id}</h3>
-                <p>{pokemon.type0} {pokemon.type1 !== "" ? ', '+ pokemon.type1 : ''}</p>
+                {/* <Link className={style.listLink} to={'/mp2/details/' + pokemon.id}> */}
+                <h5>{pokemon.common_name}</h5>
+                <h3> # {'' + pokemon.id}</h3>
+                {/* <p>{pokemon.type0} {pokemon.type1 !== "" ? ', '+ pokemon.type1 : ''}</p> */}
+                <p> {pokemon.scientific_name}</p>
+                <p> {pokemon.default_image}</p>
+                {/* <img src={pokemon.default_image} alt="poemonImage" >
 
-                <img src={pokemon.img} alt="poemonImage" >
-
-                </img>
-                </Link>
+                </img> */}
+                {/* </Link> */}
             
         </div>
 

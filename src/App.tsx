@@ -7,52 +7,44 @@ import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import './App.scss';
 
 
-type PokemonObject = {
-  species: string;
-  img: string;
-  id: number;
-  type0: string;
-  type1: string;
-  attack: number;
+type PlantObject = {
+  id: Number,
+  common_name: String,
+  scientific_name: String,
+  default_image: any,
 }
 
 function App() {
   const [isLoading, setLoading] = useState(true);
-
-  const [pokemonObjs, setPokemonObjects] = useState<PokemonObject[]>([])
-  
+  const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
   useEffect(() => {
-    axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=649`)
+    axios.get(`https://perenual.com/api/species-list?key=YOURKEY=1`) // PUT YOUR KEY HERE
     .then( async response => {
-        const pokePromise = response.data.results.map((mon : {name: string}) =>
+      console.log(response);
+      const plantResponse = response.data.data.map((plant: any)=> {
+        // console.log('heere! 25')
+        return {
+          id: plant.id,
+          common_name: plant.common_name,
+          scientific_name: plant.scientific_name[0],
+          default_image: plant.default_image ? plant.default_image.original_url : 'empty',
      
-          axios.get(`https://pokeapi.co/api/v2/pokemon/${mon.name}`).then( res => {
-            return {
-              species: res.data.species.name,
-              img: res.data.sprites.other.home.front_default,
-              id: res.data.id,
-              type0: res.data.types[0].type.name,
-              type1: res.data.types[1]? res.data.types[1].type.name : "",
-              attack: res.data.stats[1].base_stat,
-            }
-        })
-        
-      );
-        Promise.all(pokePromise).then(pokeData => {
-          const pokemonInfo = pokeData.map((data : PokemonObject) =>{ return data});
-          setPokemonObjects(pokemonInfo );
-          setLoading(false);
-        });
+        }
+      });
+      console.log(plantResponse)
+      setPlantObjects(plantResponse);
+      setLoading(false);
     })
       .catch((error) => {
-          console.error(error);
+          console.log('you messed up')
+          // console.error(error);
       });
   }, []);
   
 
   if(isLoading) {
     return (<div className="App"> 
-      <h1>Pokemon Gen 1-5</h1>
+      <h1>You Reap What You Sow</h1>
       <p>Loading...</p>
     </div>)
   }
@@ -60,7 +52,7 @@ function App() {
     
 
     <div className="App">
-      <h1>Pokemon Gen 1-5</h1>
+      <h1>You Reap What You Sow</h1>
 
 
       <BrowserRouter>
@@ -74,11 +66,11 @@ function App() {
       </div>
 
         <Routes>
-          <Route path="/mp2/" element={<ListView pokemon={pokemonObjs}/>}/>
-          <Route path="/mp2/gallery" element={<GalleryView pokemon={pokemonObjs}/>}/>
+          <Route path="/" element={<ListView plants={plantObjs}/>}/>
+          {/* <Route path="/mp2/gallery" element={<GalleryView pokemon={plantObjs}/>}/>
             
 
-            <Route path="/mp2/details/:id" element={<DetailView pokemon={pokemonObjs}/>}></Route>
+            <Route path="/mp2/details/:id" element={<DetailView pokemon={plantObjs}/>}></Route> */}
 
         </Routes>
       </BrowserRouter>
