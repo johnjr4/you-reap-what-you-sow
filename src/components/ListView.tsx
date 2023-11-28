@@ -86,9 +86,9 @@ function ListItem(props: {pokemon : PlantObject}) {
                 {/* <p>{pokemon.type0} {pokemon.type1 !== "" ? ', '+ pokemon.type1 : ''}</p> */}
                 <p> {pokemon.scientific_name}</p>
                 <p> {pokemon.default_image}</p>
-                {/* <img src={pokemon.default_image} alt="poemonImage" >
+                <img src={pokemon.default_image} alt="poemonImage" >
 
-                </img> */}
+                </img> */
                 {/* </Link> */}
             
         </div>

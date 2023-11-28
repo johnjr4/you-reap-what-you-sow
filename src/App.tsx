@@ -18,7 +18,7 @@ function App() {
   const [isLoading, setLoading] = useState(true);
   const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
   useEffect(() => {
-    axios.get(`https://perenual.com/api/species-list?key=YOURKEY=1`) // PUT YOUR KEY HERE
+    axios.get(`https://perenual.com/api/species-list?key=sk-aGCf655ebecfae54d3092&page=10`) // PUT YOUR KEY HERE
     .then( async response => {
       console.log(response);
       const plantResponse = response.data.data.map((plant: any)=> {
