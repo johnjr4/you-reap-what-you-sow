@@ -1,0 +1,250 @@
+.Dashboard {
+    display: flex;
+    flex-direction: column;
+    // height: 100vh; 
+    background-color: rgb(139,122,94);
+    // justify-content: center;
+  }
+  .Dashboard-top-half {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    // border: 3px solid #932424;
+  }
+
+  .MyProfile-container {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    margin: 20px 20px 10px 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgb(235, 235, 228);
+    border: 3px solid black;
+    border-radius: 2cap;
+    align-items: start;
+  }
+
+  .profile-pic {
+    flex: .5;
+    margin-right: 10px;
+    img {
+        border: 3px solid black;
+        border-radius: 50%;
+        width: 1;
+        margin-bottom: 10px; 
+    }
+  }
+
+  .profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    .profile-header {
+      text-align: left;
+      font-weight: bold;
+      font-size: xx-large;
+      margin-bottom: 10px;
+      padding: 20px 0 5px 0;
+    //   background-color: rgb(221, 221, 217);
+    //   border-radius: 1cap;
+    }
+
+    ul {
+        list-style: none;
+        padding: 20px;
+        margin: 0;
+        background-color: rgb(221, 221, 217);
+        border-radius: 1cap;
+    
+        li {
+            font-weight: bold;
+            font-size: large;
+            margin-bottom: 5px;
+        }
+    }
+  }
+  
+  .profile-management {
+    flex:0.5;
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px 0 30px;
+    text-align: left;
+
+    button {
+        font-size: large;
+        padding: 10px 0 10px 0;
+        margin-bottom: 10px;
+        background-color: rgb(221, 221, 217);
+        border-radius: 1cap;
+        border: 0px;
+    }
+  }
+  
+  .Dashboard-bottom-half {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    justify-content: left;
+    // border: 3px solid #932424;
+  }
+  
+  .MyPlants-container {
+    flex: 1;
+    padding: 10px;
+    margin: 10px 20px 20px 20px;
+    border: 3px solid black;
+    border-radius: 2cap;
+    background-color: rgb(235, 235, 228);
+  }
+
+  .MyPlants-header {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    justify-content: space-between;
+    text-align: left;
+    
+  }
+
+  .filter-button {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 0px;
+    background-color: rgb(221, 221, 217);
+    margin: 0 15px;
+    padding: 5px;
+    border-radius: 1cap;
+    justify-content: space-evenly;
+
+    label {
+        font-size: large;
+        margin-left: 10px;
+    }
+  }
+
+  .search-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    border: 0px;
+    background-color: rgb(221, 221, 217);
+    border-radius: 1cap;
+    justify-content: space-between;
+    text-align: left;
+    align-items: center;
+  }
+
+  .search-bar-textbox {
+    font-size: large;
+    margin: 0 10px;
+
+  }
+
+  .button-icon {
+    max-width: 40px;
+    border: 2px solid black;
+    border-radius: 50%;  
+  }
+
+  .MyPlants-title {
+    flex: 1;
+    font-size: xx-large;
+    font-weight: bold;
+    padding: 0 0 0 10px;
+  }
+  
+
+  .plant-list {  
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: center;
+  }
+
+  .plant-list-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(221, 221, 217);
+    padding: 10px;
+    border-radius: 1cap;
+    font-size: large;
+    
+    .label-picture {
+        flex: 1;
+        max-width: 100px;
+        font-weight: bold;
+    }
+    .label-name {
+        flex: 1;
+        font-weight: bold;
+    }
+    .label-cycle {
+        flex: 1;
+        font-weight: bold;
+    }
+    .label-watering {
+        flex: 1;
+        font-weight: bold;
+    }
+
+  }
+
+  .plant-list-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+    background-color: rgb(221, 221, 217);
+    border-radius: 1cap;
+    font-size: large;
+
+    .plant-pic {
+        flex: 1;
+        border-radius: 50%;
+        border: 2px solid black;
+        max-width:85px;
+        padding: 0;
+    }
+    .common-name {
+        flex: 1;
+        text-align: center;
+    }
+    .cycle {
+        flex: 1;
+        text-align: center;
+    }
+    .watering {
+        flex: 1;
+        text-align: center;
+    }
+
+  }
+
+  .AddPlants-container {
+    flex: .5;
+    margin: 20px 20px 20px 20px;
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 2cap;
+    background-color:rgb(235, 235, 228);
+  }
+
+
+
+  
