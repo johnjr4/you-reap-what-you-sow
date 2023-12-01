@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .App {
   text-align: center;
 }
@@ -35,4 +37,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  font-size: 10pt;
+  color: white;
+  background-color: $background-brown;
+}
+
+@media screen and (min-width: 500px) {
+  body{font-size: 12pt;}
+}
+
+@media screen and (min-width: 700px) {
+  body{font-size: 14pt;}
 }
