@@ -1,0 +1,93 @@
+@import '../variables.scss';
+
+.gallery-filters {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.gallery-filter-btn {
+    border-radius: 150vw; // Very large to guarantee capsule shape
+    min-width: 80px;
+    min-height: 40px;
+    flex: 1;
+    margin: 0 25px;
+    background-color: $logo-light;
+    font-size: 0.9em;
+    &:active {
+        color: white;
+        background-color: $logo-dark;
+    }
+}
+
+.masonry {
+    width: 80%;
+    min-width: 400px;
+    column-count: 4;
+    column-gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    list-style-type: none;
+    padding: 0;
+
+    // line-height: 0;
+}
+
+$border-width: 3px;
+.plant-card {
+    width: 100%;
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: 10px - 2 * $border-width;
+    border-radius: 3px;
+    border: $border-width solid transparent;
+    img {
+        display: block;
+        width: 100%;
+    }
+    &:hover {
+        // background-color: green;
+        border: $border-width solid $plant-green;
+        transition: all 0.1s linear;
+        > * {
+            transition: all 0.1s linear;
+        }
+        .plant-des {
+            visibility: visible;
+            opacity: 1;
+        }
+        img {
+            filter: brightness(40%);
+            // -webkit-filter: brightness(50%);
+        }
+    }
+}
+
+.plant-des {
+    z-index: 1;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+
+    text-decoration: none;
+    color: white;
+    overflow: hidden;
+
+    visibility: hidden;
+    opacity: 0;
+
+    > * {
+        margin: 0;
+    }
+}
+
+.plant-name {
+    font-size: 1em;
+}
+.plant-species {
+    font-size: 0.8em;
+}
