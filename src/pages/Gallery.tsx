@@ -2,15 +2,9 @@ import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import no_img from '../images/no_img.jpg';
-import './gallery.scss';
+import './Gallery.scss';
 import page1 from '../dev/page1.json'
-
-type PlantObject = {
-    id: Number,
-    common_name: string,
-    scientific_name: string,
-    default_image: any,
-  }
+import PlantObject from '../types/PlantObject';
 
 const apiKey = "sk-8CuD6569732e1585c3236"; // PUT YOUR KEY HERE
 
