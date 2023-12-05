@@ -4,65 +4,66 @@ import page1 from '../dev/page1.json';
 import no_img from '../images/no_img.jpg';
 
 type PlantObject = {
-    id: Number,
-    common_name: string,
-    scientific_name: string,
-    default_image: any,
-}
+  id: number;
+  common_name: string;
+  scientific_name: string;
+  default_image: any;
+};
 
 const defaultPlant = {
-    id: -1,
-    common_name: "Not a real plant",
-    scientific_name: "You screwed up",
-    default_image: no_img
-}
+  id: -1,
+  common_name: 'Not a real plant',
+  scientific_name: 'You screwed up',
+  default_image: no_img,
+};
 
 function PlantDetail() {
-    const { id } = useParams();
-    const [ plantObj, setPlantObj ] = useState<PlantObject>(defaultPlant);
-    const [isLoading, setLoading] = useState(true);
-    const [isFailed, setFailed] = useState(false);
+  const { id } = useParams();
+  const [plantObj, setPlantObj] = useState<PlantObject>(defaultPlant);
+  const [isLoading, setLoading] = useState(true);
+  const [isFailed, setFailed] = useState(false);
 
-    useEffect(() => {
-        // TODO: Replace with API call
-        let plantQuery = page1.find(plant => plant.id === Number(id));
-        setLoading(false);
-        if (plantQuery) {
-            setPlantObj({
-                id: plantQuery.id,
-                common_name: plantQuery.common_name,
-                scientific_name: plantQuery.scientific_name[0],
-                default_image: plantQuery.default_image ? plantQuery.default_image.original_url : no_img,
-            });
-        } else {
-            setFailed(true);
+  useEffect(() => {
+    const fetchPlantData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/plants/${id}`);
+        if (!response.ok) {
+          throw new Error('Plant not found');
         }
-    });
+        const plantData = await response.json();
+        setPlantObj({
+          id: plantData.id,
+          common_name: plantData.common_name,
+          scientific_name: plantData.scientific_name,
+          default_image: plantData.default_image ? plantData.default_image.original_url : no_img,
+        });
+      } catch (error) {
+        console.error('Error fetching plant details:', error.message);
+        setFailed(true);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (isLoading) {
-        return (
-            <div>
-                Loading...
-            </div>
-        )
-    }
+    fetchPlantData();
+  }, [id]);
 
-    if (isFailed) {
-        return (
-            <div>
-                Plant not found :(
-            </div>
-        )
-    }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    return (
-        <div>
-            <h1>
-                Plant #{id}: {plantObj.common_name}
-            </h1>
-            <img src={plantObj.default_image}/>
-        </div>
-    );
+  if (isFailed) {
+    return <div>Plant not found :(</div>;
+  }
+
+  return (
+    <div>
+      <h1>
+        Plant #{id}: {plantObj.common_name}
+      </h1>
+      <img src={plantObj.default_image} alt={plantObj.common_name} />
+    </div>
+  );
 }
 
-export default PlantDetail;
+export default PlantDetail
