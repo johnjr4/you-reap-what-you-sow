@@ -1,0 +1,38 @@
+@import '../variables.scss';
+
+.login {
+    height: 100vh;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+  .container {
+    width: 300px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: $logo-light;
+    padding: 90px;
+  }
+  .textInput {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .btn {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 5px;
+    border: none;
+    color: white;
+    background-color: black;
+  }
+  .google {
+    background-color: #2252a0;
+  }
+  .login div {
+    margin-top: 7px;
+  }
