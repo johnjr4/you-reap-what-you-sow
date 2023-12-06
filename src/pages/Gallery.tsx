@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import no_img from '../images/no_img.jpg';
 import './Gallery.scss';
 import page1 from '../dev/page1.json'
 import PlantObject from '../types/PlantObject';
 
-const apiKey = "sk-8CuD6569732e1585c3236"; // PUT YOUR KEY HERE
+const apiKey = "sk-FDOp656a72748c8563227"; // PUT YOUR KEY HERE
 
 function Gallery() {
     const [isLoading, setLoading] = useState(true);
     const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
+    const { userId} = useParams();
     useEffect(() => {
         // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`) 
         // .then( async response => {
@@ -68,8 +69,8 @@ function Gallery() {
                     <button type="button" className='gallery-filter-btn'>Trees</button>
                 </div>
                 <ul className='masonry'>
-                    {plantObjs.map((p, index) => {
-                        return <li key={index}><ListItem plant={p}/></li>
+                    {plantObjs.map((p) => {
+                        return <li key={p.id}><ListItem plant={p} userId={userId}/></li>
                     })}
                 </ul>
             </div>
@@ -77,10 +78,11 @@ function Gallery() {
     }
 }
 
-function ListItem(props: {plant : PlantObject}) {
-    const plant = props.plant
+function ListItem(props: {plant : PlantObject, userId : string}) {
+    const plant = props.plant;
+    const userId = props.userId;
     return (
-        <Link to={`/detail/${plant.id}`}>
+        <Link to={`/user/${userId}/detail/${plant.id}`}>
             <div className='plant-card'>
                 <div className='plant-des'>
                     <h3 className='plant-name'>{`#${plant.id}: ${plant.common_name}`}</h3>

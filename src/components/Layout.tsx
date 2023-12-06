@@ -15,7 +15,7 @@ function Layout() {
       const doc = await getDocs(q);
       const data = doc.docs[0].data();
       setName(data.name);
-    } catch () {
+    } catch (error) {
       console.log("An error occured while fetching user data");
     }
   };
@@ -35,13 +35,13 @@ function Layout() {
 
         <ul>
           <li>
-            <Link to="/">Dashboard</Link>
+            <Link to={`user/${user?.uid}`}>Dashboard</Link>
           </li>
           <li>
-            <Link to="/gallery">Gallery</Link>
+            <Link to={`user/${user?.uid}/gallery`}>Gallery</Link>
           </li>
           <li>
-            <Link to="detail/1">Plant Detail</Link>
+            <Link to={`user/${user?.uid}/detail/1`}>Plant Detail</Link>
           </li>
         </ul>
       </nav>
