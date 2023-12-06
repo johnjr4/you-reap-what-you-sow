@@ -1,0 +1,118 @@
+[
+    {
+        "id": 1,
+        "name": "Nolan Nettleman",
+        "email": "nnetleman@plantmail.com",
+        "picture_path": "../logo192.png",
+        "plants": [
+            {
+                "id": 1,
+                "common_name": "European Silver Fir",
+                "scientific_name": [
+                    "Abies alba"
+                ],
+                "other_name": [
+                    "Common Silver Fir"
+                ],
+                "cycle": "Perennial",
+                "watering": "Frequent",
+                "sunlight": [
+                    "full sun"
+                ],
+                "default_image": {
+                    "license": 45,
+                    "license_name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+                    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+                    "original_url": "https://perenual.com/storage/species_image/1_abies_alba/og/1536px-Abies_alba_SkalitC3A9.jpg",
+                    "regular_url": "https://perenual.com/storage/species_image/1_abies_alba/regular/1536px-Abies_alba_SkalitC3A9.jpg",
+                    "medium_url": "https://perenual.com/storage/species_image/1_abies_alba/medium/1536px-Abies_alba_SkalitC3A9.jpg",
+                    "small_url": "https://perenual.com/storage/species_image/1_abies_alba/small/1536px-Abies_alba_SkalitC3A9.jpg",
+                    "thumbnail": "https://perenual.com/storage/species_image/1_abies_alba/thumbnail/1536px-Abies_alba_SkalitC3A9.jpg"
+                }
+            },
+            {
+                "id": 2,
+                "common_name": "Pyramidalis Silver Fir",
+                "scientific_name": [
+                    "Abies alba 'Pyramidalis'"
+                ],
+                "other_name": [],
+                "cycle": "Perennial",
+                "watering": "Average",
+                "sunlight": [
+                    "full sun"
+                ],
+                "default_image": {
+                    "license": 5,
+                    "license_name": "Attribution-ShareAlike License",
+                    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+                    "original_url": "https://perenual.com/storage/species_image/2_abies_alba_pyramidalis/og/49255769768_df55596553_b.jpg",
+                    "regular_url": "https://perenual.com/storage/species_image/2_abies_alba_pyramidalis/regular/49255769768_df55596553_b.jpg",
+                    "medium_url": "https://perenual.com/storage/species_image/2_abies_alba_pyramidalis/medium/49255769768_df55596553_b.jpg",
+                    "small_url": "https://perenual.com/storage/species_image/2_abies_alba_pyramidalis/small/49255769768_df55596553_b.jpg",
+                    "thumbnail": "https://perenual.com/storage/species_image/2_abies_alba_pyramidalis/thumbnail/49255769768_df55596553_b.jpg"
+                }
+            },
+            {
+                "id": 3,
+                "common_name": "White Fir",
+                "scientific_name": [
+                    "Abies concolor"
+                ],
+                "other_name": [
+                    "Silver Fir",
+                    "Concolor Fir",
+                    "Colorado Fir"
+                ],
+                "cycle": "Perennial",
+                "watering": "Average",
+                "sunlight": [
+                    "Full sun",
+                    "part shade"
+                ],
+                "default_image": {
+                    "license": 5,
+                    "license_name": "Attribution-ShareAlike License",
+                    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+                    "original_url": "https://perenual.com/storage/species_image/3_abies_concolor/og/52292935430_f4f3b22614_b.jpg",
+                    "regular_url": "https://perenual.com/storage/species_image/3_abies_concolor/regular/52292935430_f4f3b22614_b.jpg",
+                    "medium_url": "https://perenual.com/storage/species_image/3_abies_concolor/medium/52292935430_f4f3b22614_b.jpg",
+                    "small_url": "https://perenual.com/storage/species_image/3_abies_concolor/small/52292935430_f4f3b22614_b.jpg",
+                    "thumbnail": "https://perenual.com/storage/species_image/3_abies_concolor/thumbnail/52292935430_f4f3b22614_b.jpg"
+                }
+            }       
+        ],
+        "reminders": [
+            {
+                "id": 1,
+                "plant": {
+                    "id": 1,
+                    "common_name": "European Silver Fir",
+                    "scientific_name": [
+                        "Abies alba"
+                    ],
+                    "other_name": [
+                        "Common Silver Fir"
+                    ],
+                    "cycle": "Perennial",
+                    "watering": "Frequent",
+                    "sunlight": [
+                        "full sun"
+                    ],
+                    "default_image": {
+                        "license": 45,
+                        "license_name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+                        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+                        "original_url": "https://perenual.com/storage/species_image/1_abies_alba/og/1536px-Abies_alba_SkalitC3A9.jpg",
+                        "regular_url": "https://perenual.com/storage/species_image/1_abies_alba/regular/1536px-Abies_alba_SkalitC3A9.jpg",
+                        "medium_url": "https://perenual.com/storage/species_image/1_abies_alba/medium/1536px-Abies_alba_SkalitC3A9.jpg",
+                        "small_url": "https://perenual.com/storage/species_image/1_abies_alba/small/1536px-Abies_alba_SkalitC3A9.jpg",
+                        "thumbnail": "https://perenual.com/storage/species_image/1_abies_alba/thumbnail/1536px-Abies_alba_SkalitC3A9.jpg"
+                    }
+                },
+                "date": "2023-11-29T03:24:00",
+                "frequency": 2
+            }
+        ]
+    }
+]

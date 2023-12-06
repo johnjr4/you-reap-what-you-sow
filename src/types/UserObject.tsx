@@ -5,7 +5,7 @@ type UserObject = {
     id: number,
     name: string,
     email: string,
-    picture_path: string,
+    picture_path: any,
     plants: Array<PlantObject>,
     reminders: Array<ReminderObject>
 }

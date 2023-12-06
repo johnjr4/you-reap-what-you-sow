@@ -1,9 +1,11 @@
+@import '../variables.scss';
+@import './Gallery.scss';
 .Dashboard {
     display: flex;
     flex-direction: column;
     // height: 100vh; 
-    background-color: rgb(139,122,94);
     // justify-content: center;
+    // background-color: rgb(231, 246, 244);
   }
   .Dashboard-top-half {
     display: flex;
@@ -11,7 +13,6 @@
     flex: 1;
     padding: 20px;
     box-sizing: border-box;
-    // border: 3px solid #932424;
   }
 
   .MyProfile-container {
@@ -21,9 +22,9 @@
     margin: 20px 20px 10px 20px;
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgb(235, 235, 228);
-    border: 3px solid black;
-    border-radius: 2cap;
+    background-color: $container-color;
+    border: $black-border;
+    border-radius: $large-border-radius;
     align-items: start;
   }
 
@@ -31,7 +32,7 @@
     flex: .5;
     margin-right: 10px;
     img {
-        border: 3px solid black;
+        border: $black-border;
         border-radius: 50%;
         width: 1;
         margin-bottom: 10px; 
@@ -58,8 +59,8 @@
         list-style: none;
         padding: 20px;
         margin: 0;
-        background-color: rgb(221, 221, 217);
-        border-radius: 1cap;
+        background-color: $item-color;
+        border-radius: $small-border-radius;
     
         li {
             font-weight: bold;
@@ -80,10 +81,39 @@
         font-size: large;
         padding: 10px 0 10px 0;
         margin-bottom: 10px;
-        background-color: rgb(221, 221, 217);
-        border-radius: 1cap;
+        background-color: $item-color;
+        border-radius: $small-border-radius;
         border: 0px;
     }
+  }
+
+  .Reminders-container {
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 10px 20px 20px 20px;
+    background-color: $container-color;
+    border: $black-border;
+    border-radius: $large-border-radius;
+    align-items: center;
+  }
+  .Reminders-header {
+    display: flex;
+    flex-direction: row;
+    margin: 5px 10px 5px 5px;    
+    align-items: center;
+  }
+
+  .Reminders-header-title {
+    text-align: left;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-right: 15px;
+  }
+  .reminder-text {
+    font-size: large;
+    text-align: left;
   }
   
   .Dashboard-bottom-half {
@@ -92,7 +122,7 @@
     flex: 1;
     padding: 20px;
     box-sizing: border-box;
-    justify-content: left;
+    justify-content: space-between;
     // border: 3px solid #932424;
   }
   
@@ -100,9 +130,9 @@
     flex: 1;
     padding: 10px;
     margin: 10px 20px 20px 20px;
-    border: 3px solid black;
-    border-radius: 2cap;
-    background-color: rgb(235, 235, 228);
+    background-color: $container-color;
+    border: $black-border;
+    border-radius: $large-border-radius;
   }
 
   .MyPlants-header {
@@ -112,7 +142,18 @@
     padding: 5px;
     justify-content: space-between;
     text-align: left;
-    
+    align-items: center;
+  }
+  .view-toggle {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    text-align: center;
+    color: black;
+    font-size: large;
+    border: 0px;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
   }
 
   .filter-button {
@@ -121,11 +162,11 @@
     flex-direction: row;
     align-items: center;
     border: 0px;
-    background-color: rgb(221, 221, 217);
-    margin: 0 15px;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
     padding: 5px;
-    border-radius: 1cap;
-    justify-content: space-evenly;
+    margin-right: 10px;
+    justify-content: space-around;
 
     label {
         font-size: large;
@@ -139,9 +180,9 @@
     flex-direction: row;
     padding: 5px;
     border: 0px;
-    background-color: rgb(221, 221, 217);
-    border-radius: 1cap;
-    justify-content: space-between;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+    justify-content: space-around;
     text-align: left;
     align-items: center;
   }
@@ -172,15 +213,19 @@
     padding: 10px;
     justify-content: center;
   }
+  .list-link {
+    text-decoration: none;
+    color: black;
+  }
 
   .plant-list-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(221, 221, 217);
+    background-color: $item-color;
+    border-radius: $small-border-radius;
     padding: 10px;
-    border-radius: 1cap;
     font-size: large;
     
     .label-picture {
@@ -203,15 +248,15 @@
 
   }
 
-  .plant-list-row {
+  .list-row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin: 10px 0 10px 0;
     padding: 10px;
-    background-color: rgb(221, 221, 217);
-    border-radius: 1cap;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
     font-size: large;
 
     .plant-pic {
@@ -238,11 +283,11 @@
 
   .AddPlants-container {
     flex: .5;
-    margin: 20px 20px 20px 20px;
+    margin: 20px 20px 10px 20px;
     padding: 10px;
-    border: 3px solid black;
-    border-radius: 2cap;
-    background-color:rgb(235, 235, 228);
+    background-color: $container-color;
+    border: $black-border;
+    border-radius: $large-border-radius;
   }
 
 
