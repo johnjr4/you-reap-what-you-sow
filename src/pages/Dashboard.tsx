@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
 import no_img from '../images/no_img.jpg';
 import PlantObject from '../types/PlantObject.tsx';
@@ -9,6 +9,8 @@ import page1 from '../dev/page1.json'
 import test_users from '../dev/test_users.json'
 import GetTestPlantData3 from '../dev/parse_plant_json.tsx';
 import GetTestReminderData3 from '../dev/parse_reminder_json.tsx';
+import { auth, db, logout } from "../firebase";
+
 
 // function GetTestPlantData() {
 //     const [isLoading, setLoading] = useState(true);
@@ -124,6 +126,7 @@ import GetTestReminderData3 from '../dev/parse_reminder_json.tsx';
 function GetUserData() {
     const [isLoading, setLoading] = useState(true);
     const [userObjs, setUserObjs] = useState<UserObject[]>([]);
+    const { userId} = useParams();
 
     useEffect(() => {
         // Simulating an asynchronous operation (loading from JSON file)
@@ -157,6 +160,7 @@ function GetUserData() {
 
     return (
         <div className='Dashboard'>
+            {/* <p>{`userId: ${userId}`}</p> */}
             <div className='Dashboard-top-half'>
                 <MyProfile user={userObjs[0]}/>
                 <AddPlants />
@@ -206,7 +210,7 @@ function MyProfile(props: {user : UserObject}) {
             </div>
             <div className='profile-management'>
                 <button className='buttons'>Edit Profile</button>
-                <button className='buttons'>Log Out</button>
+                <button className='buttons' onClick={logout}>Log Out</button>
             </div>
         </div>
     );
@@ -290,6 +294,7 @@ function ViewToggle( {viewMode, setViewMode} ) {
 
 function MyPlantsListView(props: {my_plants:Array<PlantObject>}) {
     const my_plants = props.my_plants;
+    const {userId} = useParams();
     return (
         <div className="plant-list">
             {/* -------------list view------------- */}
@@ -300,7 +305,7 @@ function MyPlantsListView(props: {my_plants:Array<PlantObject>}) {
                 <span className="label-watering">Watering</span>
             </div>
             {my_plants.map(plant => (
-                <Link to={`/detail/${plant.id}`} className='list-link'>
+                <Link to={`/user/${userId}/detail/${plant.id}`} className='list-link' key={plant.id}>
 
                     <div className="list-row">
                         <img
@@ -341,8 +346,9 @@ function MyPlantsGalleryView(props: {my_plants:Array<PlantObject>}) {
 }
 function GalleryListItem(props: {plant : PlantObject}) {
     const plant = props.plant
+    const { userId } = useParams();
     return (
-        <Link to={`/detail/${plant.id}`}>
+        <Link to={`/user/${userId}/detail/${plant.id}`}>
             <div className='plant-card'>
                 <div className='plant-des'>
                     <h3 className='plant-name'>{`#${plant.id}: ${plant.common_name}`}</h3>
@@ -394,7 +400,7 @@ function RemindersListView(props: {reminders:Array<ReminderObject>}) {
     return (
         <div className="reminder-list">
             {reminderMessages.map(reminderMessage => (
-                <div className='list-row'>
+                <div className='list-row' key={reminderMessage}>
                     <span className='reminder-text'>{reminderMessage}</span>
                 </div>
             ))}

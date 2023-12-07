@@ -20,9 +20,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="gallery" element={<Gallery />} />
-          <Route path="detail/:id" element={<PlantDetail />} />
+          <Route path="user/:userId" element={<Dashboard />} />
+          <Route path="user/:userId/gallery" element={<Gallery />} />
+          {/* <Route path="/detail/:id" element={<PlantDetail />} /> */}
+          <Route path="user/:userId/detail/:plantId" element={<PlantDetail />} />
         </Route>
       </Routes>
     </div>

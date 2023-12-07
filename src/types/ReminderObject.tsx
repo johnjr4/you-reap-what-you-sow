@@ -1,6 +1,6 @@
 import PlantObject from './PlantObject.tsx'
 type ReminderObject = {
-    id: number,
+    id: any,
     plant: PlantObject,
     date: Date,
     frequency: number // days
