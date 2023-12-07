@@ -5,155 +5,52 @@ import no_img from '../images/no_img.jpg';
 import PlantObject from '../types/PlantObject.tsx';
 import UserObject from '../types/UserObject.tsx';
 import ReminderObject from '../types/ReminderObject.tsx';
-import page1 from '../dev/page1.json'
-import test_users from '../dev/test_users.json'
-import GetTestPlantData3 from '../dev/parse_plant_json.tsx';
-import GetTestReminderData3 from '../dev/parse_reminder_json.tsx';
+import page1 from '../dev/page1.json';
+import test_users from '../dev/test_users.json';
+import updated_users from '../dev/updated_users.json';
+import GetTestPlantData3 from '../dev/GetTestPlantData3.tsx';
+import GetTestReminderData3 from '../dev/GetTestReminderData3.tsx';
+import ReminderJSON_to_Obj from '../dev/ReminderJSON _to_Obj.tsx';
+import PlantIdArr_to_PlantObjArr from '../dev/PlantIdArr_to_PlantObjArr.tsx';
 import { auth, db, logout } from "../firebase";
 
 
-// function GetTestPlantData() {
-//     const [isLoading, setLoading] = useState(true);
-//     const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
-//     useEffect(() => {
-//         // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`) 
-//         // .then( async response => {
-//             // // console.log(response);
-//             // const plantResponse = response.data.data.map((plant: any)=> {
-//                 //     // console.log('heere! 25')
-//                 //     return {
-//                     //     id: plant.id,
-//                     //     common_name: plant.common_name,
-//                     //     scientific_name: plant.scientific_name[0],
-//                     //     default_image: plant.default_image ? plant.default_image.original_url : no_img,
-                    
-//                     //     }
-//                     // });
-//                     // //console.log(plantResponse)
-//         // setPlantObjects(plantResponse);
-//         // setLoading(false);
-//         // })
-//         // .catch(() => {
-//         //     console.log('you messed up')
-//         // });
-
-//         // Uncomment above and delte below! Local JSON is just for developing UI without burning through API calls
-//         const plantResponse = page1.map((plant: any) => {
-//             return {
-//                 id: plant.id,
-//                 common_name: plant.common_name,
-//                 scientific_name: plant.scientific_name[0],
-//                 cycle: plant.cycle ? plant.cycle : 'no data',
-//                 watering: plant.watering ? plant.watering : 'no data',
-//                 default_image: plant.default_image ? plant.default_image.original_url : no_img,
-//             }
-//         });
-//         setPlantObjects(plantResponse);
-//         setLoading(false);
-//         // End dev test code
-//     }, []);
-//     return plantObjs;
-// }
-// function GetTestPlantData2() {
-//     const [isLoading, setLoading] = useState(true);
-//     const [plantObjs, setPlantObjects] = useState<PlantObject[]>([]);
-//     // const [reminderObjs, setReminderObjects] = useState<ReminderObject[]>([])
-
-//     useEffect(() => {
-//         // Simulating an asynchronous operation (loading from JSON file)
-//         const fetchData = async () => {
-//             try {
-//                 // const response = await fetch('../dev/page1.json');
-//                 // const data = await response.json();
-//                 const data = page1;
-
-//                 let plantResponse:Array<PlantObject> = data.map(plant => ({
-//                     id: plant.id,
-//                     common_name: plant.common_name,
-//                     scientific_name: plant.scientific_name[0],
-//                     cycle: plant.cycle ? plant.cycle : 'no data',
-//                     watering: plant.watering ? plant.watering : 'no data',
-//                     default_image: plant.default_image ? plant.default_image.original_url : no_img,
-//                 }));
-                
-//                 setPlantObjects(plantResponse);
-//                 setLoading(false);
-//             } catch (error) {
-//                 console.error('Error fetching data:', error);
-//                 setLoading(false);
-//             }
-//         };
-
-//         fetchData();
-//     }, []);
-
-//     return plantObjs;
-// }
-
-// function GetTestReminderData(plants) {
-//     const reminders:Array<ReminderObject> = Array<ReminderObject>(plants.length);
-//     for(let i = 0; i < plants.length; ++i) {
-//         let freq = 0;
-//         switch (plants[i].watering.toLowerCase()) {
-//             case 'frequent':
-//                 freq = 2;
-//                 break;
-//             case 'average':
-//                 freq = 7;
-//                 break;
-//             case 'minimum':
-//                 freq = 12;
-//                 break;
-//             case 'none':
-//                 freq = 0;
-//                 break;
-//             default:
-//                 freq = 0;
-//                 break;
-//         }
-//         let reminder: ReminderObject = {
-//             id: plants[i].id,
-//             plant: plants[i],
-//             date: new Date('2023-11-29T03:24:00'),
-//             frequency: freq
-//         };
-//         reminders[i] = reminder;        
-//     }
-//     return reminders;
-// }
-
-
-function GetUserData() {
+function GetUserData2(data) {
     const [isLoading, setLoading] = useState(true);
-    const [userObjs, setUserObjs] = useState<UserObject[]>([]);
+    const [isFailed, setFailed] = useState(false);
+    const [userObj, setUserObj] = useState<UserObject>();
     const { userId} = useParams();
 
     useEffect(() => {
         // Simulating an asynchronous operation (loading from JSON file)
-        const fetchData = async () => {
+        const fetchUserData = async () => {
             try {
-
-                const data = test_users;
-                // console.log((data));
-                let userResponse:Array<UserObject> = data.map(user => ({
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    picture_path: user.picture_path ? user.picture_path : no_img,
-                    plants: GetTestPlantData3(user.plants),
-                    reminders: GetTestReminderData3(user.reminders)
-                }));
-                
-                setUserObjs(userResponse);
+                let userQuery = updated_users.find(user => user.id === String(userId));
                 setLoading(false);
+                if (userQuery) {
+                    // console.log(userQuery);
+                    setUserObj({
+                        id: userQuery.id,
+                        name: userQuery.name,
+                        email: userQuery.email,
+                        picture_path: userQuery.picture_path ? userQuery.picture_path : no_img,
+                        plants: userQuery.plants,
+                        reminders: ReminderJSON_to_Obj(userQuery.reminders)
+                    });
+                } else {
+                    setFailed(true);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setLoading(false);
             }
         };
-        fetchData();
-    }, []);
+        fetchUserData();
+    }, [data, userId]);
 
+    if (isFailed) {
+        return <div>Failed to load profile</div>;
+    }
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -161,18 +58,18 @@ function GetUserData() {
     return (
         <div className='Dashboard'>
             {/* <p>{`userId: ${userId}`}</p> */}
+            {/* <p>{JSON.stringify(userObj)}</p> */}
             <div className='Dashboard-top-half'>
-                <MyProfile user={userObjs[0]}/>
+                <MyProfile user={userObj}/>
                 <AddPlants />
             </div>
             <div className='Dashboard-bottom-half'>
-                <Reminders user={userObjs[0]}/>
-                <MyPlants user={userObjs[0]}/>
+                <Reminders user={userObj}/>
+                <MyPlants user={userObj}/>
             </div>
         </div>
     );
 }
-
 export default function Dashboard() {
     return (
         // <div className='Dashboard'>
@@ -185,7 +82,8 @@ export default function Dashboard() {
         //         <MyPlants user={test_user_loaded}/>
         //     </div>
         // </div>
-        <div><GetUserData /></div>
+        // <div><GetUserData data={test_users} /></div>
+        <div><GetUserData2 data={updated_users} /></div>
     );
 }
 
@@ -220,7 +118,11 @@ function MyProfile(props: {user : UserObject}) {
 function MyPlants(props: {user:UserObject}) {
     const user = props.user;
     const [viewMode, setViewMode] = useState('list');
-
+    // const user_plants:Array<PlantObject> = PlantIdArr_to_PlantObjArr(user.plants, page1);
+    const user_plants: Array<PlantObject> = PlantIdArr_to_PlantObjArr({
+        plantIds: user.plants,
+        data: page1,
+      });
     return (
         <div className='MyPlants-container'>
             <div className="MyPlants-header">
@@ -259,9 +161,9 @@ function MyPlants(props: {user:UserObject}) {
             {/* <MyPlantsGalleryView my_plants={user.plants}/> */}
             
             {viewMode === 'list' ? (
-            <MyPlantsListView my_plants={user.plants} />
+            <MyPlantsListView my_plants={user_plants} />
             ) : (
-            <MyPlantsGalleryView my_plants={user.plants} />
+            <MyPlantsGalleryView my_plants={user_plants} />
             )}
         </div>
     );
@@ -389,7 +291,7 @@ function RemindersListView(props: {reminders:Array<ReminderObject>}) {
         const timeDifference = currentDate.getTime() - dateCreated.getTime();
         const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
         if (reminder.frequency !== 0 && daysDifference % reminder.frequency === 0) {
-            reminderMessages.push(`Today's the day to water your ${reminder.plant.common_name} plants!`);
+            reminderMessages.push(`Today's the day to water your ${reminder.plant_name} plants!`);
         }
     });
     

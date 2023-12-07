@@ -5,8 +5,11 @@ import test_users from '../dev/test_users.json';
 import no_img from '../images/no_img.jpg';
 import PlantObject from '../types/PlantObject';
 import UserObject from '../types/UserObject.tsx';
-import GetTestPlantData3 from '../dev/parse_plant_json.tsx';
-import GetTestReminderData3 from '../dev/parse_reminder_json.tsx';
+import GetTestPlantData3 from '../dev/GetTestPlantData3.tsx';
+import GetTestReminderData3 from '../dev/GetTestReminderData3.tsx';
+import ReminderJSON_to_Obj from '../dev/ReminderJSON _to_Obj.tsx';
+import PlantIdArr_to_PlantObjArr from '../dev/PlantIdArr_to_PlantObjArr.tsx';
+import updated_users from '../dev/updated_users.json';
 
 const defaultPlant = {
   id: -1,
@@ -94,15 +97,15 @@ function AddPlantToUser(props :{userId:any, plantId:any}) {
   } else {
       setFailed(true);
   }
-  let userQuery = test_users.find(user => user.id === Number(userId));
+  let userQuery = updated_users.find(user => user.id === String(userId));
   if (userQuery) {
       setUserObj({
-          id: userQuery.id,
-          name: userQuery.name,
-          email: userQuery.email,
-          picture_path: userQuery.picture_path,
-          plants: GetTestPlantData3(userQuery.plants),
-          reminders: GetTestReminderData3(userQuery.reminders)
+        id: userQuery.id,
+        name: userQuery.name,
+        email: userQuery.email,
+        picture_path: userQuery.picture_path ? userQuery.picture_path : no_img,
+        plants: userQuery.plants,
+        reminders: ReminderJSON_to_Obj(userQuery.reminders)
       })
   }
   if (userObj && plantObj) {
