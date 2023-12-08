@@ -5,22 +5,21 @@ import no_img from '../images/no_img.jpg';
 import './Gallery.scss';
 import page1 from '../dev/page1.json'
 import PlantObject from '../types/PlantObject';
+// const Fuse = require('fuse.js');
+import Fuse from 'fuse.js';
 
 const apiKey = "sk-FDOp656a72748c8563227"; // PUT YOUR KEY HERE
 
 function plantFilter(idx, plant) {
-    console.log(`Checking ${plant} against filter ${idx}`);
-    console.log(plant);
+    // console.log(`Checking ${plant} against filter ${idx}`);
+    // console.log(plant);
     switch (idx) {
         case 1:
             return plant.cycle === "Annual"
-            break;
         case 2:
             return plant.cycle === "Perennial"
-            break;
         case 3:
             return plant.cycle === "Biennial"
-            break;
         case 4:
             return plant.type === "vegetable";
         case 5:
@@ -32,10 +31,16 @@ function plantFilter(idx, plant) {
     }
 }
 
+function plantSearch(plant, query) {
+    return true;
+}
+
 function Gallery() {
     const [isLoading, setLoading] = useState(true);
     const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
+    const [plantFuse, setPlantFuse] = useState<Fuse>();
     const [filterNum, setFilterNum] = useState(0);
+    const [query, setQuery] = useState("");
     const { userId } = useParams();
 
     const filters = ['Annuals', 'Perennials', 'Biennials', 'Vegetables', 'Trees', 'Flowers']
@@ -73,6 +78,10 @@ function Gallery() {
             }
         });
         setPlantObjects(plantResponse);
+        const fuse = new Fuse(plantResponse, {
+            keys: ['common_name']
+        })
+        setPlantFuse(fuse);
         setLoading(false);
         // End dev test code
     }, []);
@@ -97,6 +106,12 @@ function Gallery() {
                 <h1>
                     Plant Gallery
                 </h1>
+                <input 
+                    type='text' 
+                    id='search-bar'
+                    placeholder='Search for a plant...'
+                    onChange={(e) => setQuery(e.target.value)}
+                />
                 <div className='gallery-filters'>
                     {filters.map((filter, idx) => {
                         return <button
@@ -107,7 +122,16 @@ function Gallery() {
                     })}
                 </div>
                 <ul className='masonry'>
-                    {plantObjs.map((p: PlantObject) => {
+                    {query !== "" ?
+                    plantFuse.search(query).map((p: any) => {
+                        if (plantFilter(filterNum, p)) {
+                            return <li key={p.id}><ListItem plant={p.item} userId={userId}/></li>
+                        } else {
+                            return null;
+                        }
+                    })
+                    :
+                    plantObjs.map((p:PlantObject) => {
                         if (plantFilter(filterNum, p)) {
                             return <li key={p.id}><ListItem plant={p} userId={userId}/></li>
                         } else {
@@ -123,6 +147,7 @@ function Gallery() {
 function ListItem(props: {plant : PlantObject, userId : string}) {
     const plant = props.plant;
     const userId = props.userId;
+    console.log(plant);
     return (
         <Link to={`/user/${userId}/detail/${plant.id}`}>
             <div className='plant-card'>

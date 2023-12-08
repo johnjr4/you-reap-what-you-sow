@@ -50,6 +50,10 @@ body {
   margin-top: max(10vh, 40px); // navbar offset
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 button, input {
   font-family: 'Libre Baskerville', serif;
 }
