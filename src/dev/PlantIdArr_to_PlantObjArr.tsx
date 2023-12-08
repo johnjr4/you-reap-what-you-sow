@@ -52,7 +52,7 @@ function PlantIdArr_to_PlantObjArr(props: { plantIds: Array<number>; data: any }
                 cycle: plantData.cycle,
                 watering: plantData.watering,
                 default_image: plantData.default_image
-                  ? plantData.default_image.original_url
+                  ? plantData.default_image.regular_url
                   : no_img,
               });
             } else {

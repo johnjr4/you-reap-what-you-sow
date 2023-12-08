@@ -95,10 +95,9 @@ function MyProfile(props: {user : UserObject}) {
                 <img
                     className='profile-pic'
                     src={user.picture_path}
-                    alt={'Profile Picutre'}
+                    alt={'Profile'}
                 />
             </div>
-            {/* -------------name, email, profile pic------------- */}
             <div className="profile-info">
                 <span className='profile-header'>My Profile </span>
                 <ul className="profile-info-data">
@@ -106,68 +105,160 @@ function MyProfile(props: {user : UserObject}) {
                     <li>{user.email}</li>
                 </ul>
             </div>
-            <div className='profile-management'>
+            {/* <div className='profile-management'>
                 <button className='buttons'>Edit Profile</button>
                 <button className='buttons' onClick={logout}>Log Out</button>
-            </div>
+            </div> */}
         </div>
     );
 }
-
-
 function MyPlants(props: {user:UserObject}) {
     const user = props.user;
+    const [isLoading, setLoading] = useState(true);
+    const [isFailed, setFailed] = useState(false);
+    const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
+    const [filterNum, setFilterNum] = useState(0);
     const [viewMode, setViewMode] = useState('list');
-    // const user_plants:Array<PlantObject> = PlantIdArr_to_PlantObjArr(user.plants, page1);
-    const user_plants: Array<PlantObject> = PlantIdArr_to_PlantObjArr({
-        plantIds: user.plants,
-        data: page1,
-      });
-    return (
-        <div className='MyPlants-container'>
-            <div className="MyPlants-header">
-                {/* filter,search,sort,delete buttons implemented using api user endpoints */}
-                {/* -------------my plants filtering/searching/sorting------------- */}
-                <span className='MyPlants-title'>My Plants</span>
-                <div className='view-toggle'>
-                    <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
-                </div>
-                <button className='filter-button'>
-                    <img
-                        className='button-icon'
-                        src= '../logo192.png'
-                        alt='filter icon'
-                    />
-                    <label>Filter</label>
-                </button>
-                <div className='search-bar'>
-                    <img
-                        className='button-icon'
-                        src= '../logo192.png'
-                        alt='search icon'
-                    />
-                    <form className="search-bar-textbox">
-                        <input
-                        type="search"
-                        id="query"
-                        name='q'
-                        placeholder="Search..."
-                        // onChange={(event) => setKeyword(event.target.value)}
-                        />
-                    </form>
-                </div>
+    const filters = ['Annuals', 'Perennials', 'Biennials', 'Vegetables', 'Trees', 'Flowers']
+    const data = page1;
+    // replace with api call
+    useEffect(() => {
+        const fetchPlantData = async () => {
+          try {
+            let fetchedPlantObjArr:PlantObject[] = [];
+            for (const plantId of user.plants) {
+              let plantData = data.find((plant) => plant.id === Number(plantId));
+              if (plantData) {
+                fetchedPlantObjArr.push({
+                  id: plantData.id,
+                  common_name: plantData.common_name,
+                  scientific_name: plantData.scientific_name[0],
+                  cycle: plantData.cycle,
+                  watering: plantData.watering,
+                  default_image: plantData.default_image
+                    ? plantData.default_image.regular_url
+                    : no_img,
+                });
+              } else {
+                setFailed(true);
+              }
+            }
+            setPlantObjects(fetchedPlantObjArr);
+            setLoading(false);
+          } catch (error) {
+            console.error('Error fetching plant data:', error);
+            setLoading(false);
+            setFailed(true);
+          }
+        };
+        fetchPlantData();
+    }, [user, data]);
+
+    function selectFilter(idx) {
+        if (filterNum === idx) {
+            setFilterNum(0); // Turn filters off
+        } else {
+            setFilterNum(idx);
+        }
+    }
+    if (isFailed) {
+        return (
+            <div>Failed to load plants</div>
+        );
+    }
+    if (isLoading) {
+        return (
+            <div>
+                Loading your plants...
             </div>
-            {/* <MyPlantsListView my_plants={user.plants}/> */}
-            {/* <MyPlantsGalleryView my_plants={user.plants}/> */}
-            
-            {viewMode === 'list' ? (
-            <MyPlantsListView my_plants={user_plants} />
-            ) : (
-            <MyPlantsGalleryView my_plants={user_plants} />
-            )}
-        </div>
+        );
+    } else {
+        return (
+            <div className='MyPlants-container'>
+                <span className='MyPlants-title'>My Plants</span>
+                <div className="MyPlants-header">
+                    <div className='view-toggle'>
+                        <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+                    </div>
+                    <div className='MyPlants-gallery-filters'>
+                        {filters.map((filter, idx) => {
+                            return <button
+                                style={filterNum === idx + 1 ? {"backgroundColor": "lightgreen"} : {}}
+                                onClick={() => selectFilter(idx + 1)}
+                                className='MyPlants-gallery-filter-btn'
+                            >{filter}</button>
+                        })}
+                    </div>
+                </div>
+                {viewMode === 'list' ? (
+                    <div className="plant-list">
+                        <div className="plant-list-header">
+                            <span className="label-picture">Picture</span>
+                            <span className="label-name">Name</span>
+                            <span className="label-cycle">Cycle</span>
+                            <span className="label-watering">Watering</span>
+                        </div>
+                        {plantObjs.map((plant: PlantObject) => {
+                            if (plantFilter(filterNum, plant)) {
+                                return (
+                                    <ListItem plant={plant} />
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </div>
+                ) : (
+                    <ul className='MyPlants-masonry'>
+                        {plantObjs.map((p: PlantObject) => {
+                            if (plantFilter(filterNum, p)) {
+                                return <li key={p.id}><GalleryListItem plant={p} /></li>
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </ul>                    
+                )}
+            </div>            
+        );
+    }
+
+}
+function ListItem(props: {plant: PlantObject}) {
+    const plant = props.plant
+    const { userId } = useParams();
+    return (
+        <Link to={`/user/${userId}/detail/${plant.id}`} className='list-link' key={plant.id}>
+            <div className="list-row">
+                <img
+                    className='plant-pic'
+                    src={plant.default_image}
+                    alt={`${plant.common_name}`}
+                />
+                <span className="common-name">{plant.common_name}</span>
+                <span className="cycle">{plant.cycle}</span>
+                <span className="watering">{plant.watering}</span>
+
+            </div>
+        </Link>
+    );        
+}
+function GalleryListItem(props: {plant : PlantObject}) {
+    const plant = props.plant
+    const { userId } = useParams();
+    return (
+        <Link to={`/user/${userId}/detail/${plant.id}`}>
+            <div className='MyPlants-plant-card'>
+                <div className='MyPlants-plant-des'>
+                    <h3 className='MyPlants-plant-name'>{`#${plant.id}: ${plant.common_name}`}</h3>
+                    <p className='MyPlants-plant-species'><i>{plant.scientific_name}</i></p>
+                </div>
+                <img src={plant.default_image} alt={plant.common_name}/>
+            </div>
+        </Link>
     );
 }
+
 
 function ViewToggle( {viewMode, setViewMode} ) {
     return (
@@ -194,73 +285,30 @@ function ViewToggle( {viewMode, setViewMode} ) {
     );
   }
 
-function MyPlantsListView(props: {my_plants:Array<PlantObject>}) {
-    const my_plants = props.my_plants;
-    const {userId} = useParams();
-    return (
-        <div className="plant-list">
-            {/* -------------list view------------- */}
-            <div className="plant-list-header">
-                <span className="label-picture">Picture</span>
-                <span className="label-name">Name</span>
-                <span className="label-cycle">Cycle</span>
-                <span className="label-watering">Watering</span>
-            </div>
-            {my_plants.map(plant => (
-                <Link to={`/user/${userId}/detail/${plant.id}`} className='list-link' key={plant.id}>
-
-                    <div className="list-row">
-                        <img
-                            className='plant-pic'
-                            src={plant.default_image}
-                            alt={`${plant.common_name}`}
-                        />
-                        <span className="common-name">{plant.common_name}</span>
-                        <span className="cycle">{plant.cycle}</span>
-                        <span className="watering">{plant.watering}</span>
-
-                    </div>
-                </Link>
-            ))}
-    </div>
-    );
+function plantFilter(idx, plant) {
+    console.log(`Checking ${plant} against filter ${idx}`);
+    console.log(plant);
+    switch (idx) {
+        case 1:
+            return plant.cycle === "Annual"
+            break;
+        case 2:
+            return plant.cycle === "Perennial"
+            break;
+        case 3:
+            return plant.cycle === "Biennial"
+            break;
+        case 4:
+            return plant.type === "vegetable";
+        case 5:
+            return plant.type === "trees";
+        case 6:
+            return plant.flowers;
+        default:
+            return true; // 0
+    }
 }
 
-function MyPlantsGalleryView(props: {my_plants:Array<PlantObject>}) {
-    const my_plants = props.my_plants;
-    return (
-        <div>
-            <div className='gallery-filters'>
-                <button type="button" className='gallery-filter-btn'>Annuals</button>
-                <button type="button" className='gallery-filter-btn'>Perennials</button>
-                <button type="button" className='gallery-filter-btn'>Biennials</button>
-                <button type="button" className='gallery-filter-btn'>Vegetables</button>
-                <button type="button" className='gallery-filter-btn'>Flowers</button>
-                <button type="button" className='gallery-filter-btn'>Trees</button>
-            </div>
-            <ul className='masonry'>
-                {my_plants.map((p, index) => {
-                    return <li key={index}><GalleryListItem plant={p}/></li>
-                })}
-            </ul>
-        </div>
-    )
-}
-function GalleryListItem(props: {plant : PlantObject}) {
-    const plant = props.plant
-    const { userId } = useParams();
-    return (
-        <Link to={`/user/${userId}/detail/${plant.id}`}>
-            <div className='plant-card'>
-                <div className='plant-des'>
-                    <h3 className='plant-name'>{`#${plant.id}: ${plant.common_name}`}</h3>
-                    <p className='plant-species'><i>{plant.scientific_name}</i></p>
-                </div>
-                <img src={plant.default_image} alt={plant.common_name}/>
-            </div>
-        </Link>
-    )
-}
 
 function Reminders(props: {user:UserObject}) {
     const user = props.user;
