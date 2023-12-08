@@ -1,0 +1,52 @@
+@import '../variables.scss';
+
+.plant-detail {
+    width: 70%;
+    min-width: 800px;
+    height: 80vh;
+    padding-top: max(2vh, 40px);
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    overflow: hidden;
+}
+
+$radius: 10px;
+
+.detail-image {
+    width: 40%;
+    object-fit: cover;
+    border-radius: $radius 0 0 $radius;
+    position: relative;
+}
+
+.plant-details {
+    position: relative;
+    width: 60%;
+    border-radius: 0 $radius $radius 0;
+    box-sizing: border-box;
+    margin: 0 10px;
+    padding: 30px;
+    background-color: $manilla;
+    color: $text-dark;
+}
+
+.detail-title {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.plant-details .plant-species {
+    font-size: 0.8em;
+}
+
+.detail-description {
+    font-size: 0.9em;
+    text-align: justify;
+}
+
+.detail-stats {
+    font-size: 0.9em;
+    column-count: 2;
+    text-align: left;
+}

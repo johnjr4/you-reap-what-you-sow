@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import page1 from '../dev/page1.json';
+import page1 from '../dev/compiled_responses1.json';
 import test_users from '../dev/test_users.json';
 import no_img from '../images/no_img.jpg';
 import PlantObject from '../types/PlantObject';
 import UserObject from '../types/UserObject.tsx';
 import GetTestPlantData3 from '../dev/parse_plant_json.tsx';
 import GetTestReminderData3 from '../dev/parse_reminder_json.tsx';
+import './PlantDetail.scss';
+import PlantDetailObject from '../types/PlantDetailObject.tsx';
+import axios from 'axios';
 
 const defaultPlant = {
   id: -1,
@@ -17,10 +20,12 @@ const defaultPlant = {
   default_image: no_img
 }
 
+const apiKey = "sk-8CuD6569732e1585c3236";
+
 function PlantDetail() {
   const { userId, plantId } = useParams();
   console.log(`user ${userId} plant ${plantId}`)
-  const [ plantObj, setPlantObj ] = useState<PlantObject>(defaultPlant);
+  const [ plantObj, setPlantObj ] = useState<PlantDetailObject>();
   const [isLoading, setLoading] = useState(true);
   const [isFailed, setFailed] = useState(false);
 
@@ -28,26 +33,26 @@ function PlantDetail() {
   useEffect(() => {
       // TODO: Replace with API call
       const fetchPlantData = async () => {
-          let plantData = page1.find(plant => plant.id === Number(plantId));
-          setLoading(false);
+          // Dummy JSON data
+          let plantData = page1.find(plant => plant.id === 100);
+          // Real plant API call
+          // let plantData = await axios.get(`https://perenual.com/api/species/details/${plantId}?key=${apiKey}`)
           if (plantData) {
-              setPlantObj({
-                  id: plantData.id,
-                  common_name: plantData.common_name,
-                  scientific_name: plantData.scientific_name[0],
-                  cycle: plantData.cycle,
-                  watering: plantData.watering,
-                  default_image: plantData.default_image ? plantData.default_image.original_url : no_img,
-              });
-              // const response = await fetch(`http://localhost:3000/plants/${plantId}`);
-              // if (!response.ok) {
-              //     throw new Error('Plant not found');
-              // }
-              // const testServerPlants = await response.json();
-              // console.log(JSON.stringify(testServerPlants));
+            // setPlantObj({
+            //   id: plantData.id,
+            //   common_name: plantData.common_name,
+            //   scientific_name: plantData.scientific_name[0],
+            //   cycle: plantData.cycle,
+            //   watering: plantData.watering,
+            //   default_image: plantData.default_image ? plantData.default_image.original_url : no_img,
+            // });
+            console.log(plantData);
+            setPlantObj(plantData);
+            // setPlantObj(plantData.data);
           } else {
-              setFailed(true);
+            setFailed(true);
           }
+          setLoading(false);
       };
       fetchPlantData();
   }, [plantId]);
@@ -61,11 +66,29 @@ function PlantDetail() {
   }
 
   return (
-    <div>
-      <h1>
-        Plant #{plantId}: {plantObj.common_name}
-      </h1>
-      <img src={plantObj.default_image} alt={plantObj.common_name} />
+    <div className="plant-detail">
+      <img className="detail-image" src={plantObj!.default_image.original_url} alt={plantObj!.common_name}/>
+      <div className="plant-details">
+        <div className="detail-header">
+          <h2 className="detail-title"> 
+            Plant #{plantId}: {plantObj!.common_name}
+          </h2>
+          <span className='plant-species'><i>{plantObj!.scientific_name}</i></span>
+        </div>
+        <div className='detail-description'>
+          {plantObj!.description}
+        </div>
+        <ul className='detail-stats'>
+          <li key="type"      >Type: {plantObj!.type}</li>
+          <li key="cycle"     >Cycle: {plantObj!.cycle}</li>
+          <li key="watering"  >Watering: {plantObj!.watering}</li>
+          <li key="flowers"   >Flowers: {plantObj!.flowers ? "Yes" : "No"}</li>
+          <li key="fruits"    >Fruits: {plantObj!.fruits ? "Yes" : "No"}</li>
+          <li key="invasive"  >Invasive: {plantObj!.invasive ? "Yes" : "No"}</li>
+          <li key="indoor"    >Indoor: {plantObj!.indoor ? "Yes" : "No"}</li>
+          <li key="care_level">Care level: {plantObj!.care_level ? "Yes" : "No"}</li>
+        </ul>
+      </div>
     </div>
   );
 }
