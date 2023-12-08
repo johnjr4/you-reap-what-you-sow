@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import page1 from '../dev/page1.json';
 import test_users from '../dev/test_users.json';
 import no_img from '../images/no_img.jpg';
@@ -10,6 +10,8 @@ import GetTestReminderData3 from '../dev/GetTestReminderData3.tsx';
 import ReminderJSON_to_Obj from '../dev/ReminderJSON _to_Obj.tsx';
 import PlantIdArr_to_PlantObjArr from '../dev/PlantIdArr_to_PlantObjArr.tsx';
 import updated_users from '../dev/updated_users.json';
+import './PlantDetail.scss';
+import { link } from 'fs';
 
 const defaultPlant = {
   id: -1,
@@ -64,16 +66,60 @@ function PlantDetail() {
   }
 
   return (
-    <div>
-      <h1>
-        Plant #{plantId}: {plantObj.common_name}
-      </h1>
-      <img src={plantObj.default_image} alt={plantObj.common_name} />
+    <div className='PlantDetail'>
+      <div className='PlantDetail-container'>
+        <div className='PlantDetail-header'>
+            <span className='common-name'>{`${plantObj.common_name}: `}</span>
+            <span className='scientific-name'>{`${plantObj.scientific_name}`}</span>
+          </div>
+          <div className='PlantDetail-info'>
+            <ul>
+              <li>{`Cycle: ${plantObj.cycle}`}</li>
+              <li>{`Watering: ${plantObj.watering}`}</li>
+            </ul>
+          </div>
+          <div className='PlantDetail-controls'>
+            <Link to={`/user/${userId}/detail/${String(GetPrevDetail(plantObj.id))}`} className='prev-button'>
+              <label>
+                Previous
+              </label>
+            </Link>
+            <button className='add-button'>
+              <img
+                  className='button-icon'
+                  src= {no_img}
+                  alt='filter icon'
+              />
+              <label className='button-label'>Add to My Plants</label>
+            </button>
+            <Link to={`/user/${userId}/detail/${String(GetNextDetail(plantObj.id))}`} className='prev-button'>
+              <label>
+                  Next
+                </label>
+            </Link>
+          </div>
+          <div className='PlantDetail-img'>
+            <img src={plantObj.default_image} alt={plantObj.common_name} />
+          </div>
+      </div>
     </div>
   );
 }
-
 export default PlantDetail
+
+function GetPrevDetail(plantId) {
+  if (plantId === 1) {
+    return 1;
+  }
+  return plantId - 1;
+}
+function GetNextDetail(plantId) {
+ // temp 
+  if (plantId === 30) {
+    return 30;
+  }
+  return plantId + 1;
+}
 
 function AddPlantToUser(props :{userId:any, plantId:any}) {
   const userId = props.userId;
@@ -111,7 +157,7 @@ function AddPlantToUser(props :{userId:any, plantId:any}) {
   if (userObj && plantObj) {
       const updatedUserObj: UserObject = {
           ...userObj,
-          plants: [...userObj.plants, plantObj]
+          plants: [...userObj.plants, plantObj.id]
       };
 
       // Update the state with the new user object

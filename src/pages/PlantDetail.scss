@@ -1,0 +1,110 @@
+@import '../variables.scss';
+
+.PlantDetail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+.PlantDetail-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: $black-border;
+    margin: 50px;
+    padding: 50px;
+    background-color: $container-color;
+    border-radius: $large-border-radius;
+}
+.PlantDetail-header {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: xx-large;
+    font-weight: bold;
+    padding: 20px;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+}
+.scientific-name {
+    margin-left: 1vh;
+    font-style: italic;
+}
+.PlantDetail-info {
+    font-size: x-large;
+    padding: 20px;
+    ul {
+        list-style: none;
+        padding: 20px;
+        margin: 0;
+        background-color: $item-color;
+        border-radius: $small-border-radius;
+    
+        li {
+            font-weight: bold;
+            font-size: large;
+            margin-bottom: 5px;
+        }
+    }
+}
+.PlantDetail-img {
+    flex: 1;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+    padding: 20px;
+    img {
+        // max-width: fit-content;
+        max-width: 75%;
+        max-height: 75%;
+        border-radius: $small-border-radius;
+    }
+}
+.PlantDetail-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+.add-button {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 20px;
+    margin: 0 0 20px 0;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+    border: 0px;
+}
+.button-icon {
+    flex: 1;
+    padding: 0 10px 0 10px;
+    img {
+        max-width: 75px;
+        max-height: 75px;
+        border-radius: 50%;
+    }
+}
+.button-label {
+    flex: 1;
+    padding: 0 10px 0 10px;     
+    font-size: large;
+}
+.prev-button {
+    flex: 1;
+    font-size: large;
+    padding: 0 10px 0 10px;
+    margin: 0 10px 0 10px;
+    text-decoration: none;
+    color: black;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+}

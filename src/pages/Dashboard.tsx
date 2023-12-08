@@ -314,16 +314,11 @@ function RemindersListView(props: {reminders:Array<ReminderObject>}) {
 function AddPlants() {
     return(
         <div className='AddPlants-container'>
-            -------------add plants-------------
-            <Link to={`/gallery`}>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Morbi facilisis neque quis neque convallis, a consequat lectus ultricies. 
-                    Sed ornare porta nulla, nec aliquam lorem congue quis. 
-                    Pellentesque quis luctus massa, non finibus mi. Nam ac ultricies magna. 
-                    Mauris lobortis faucibus odio, ut tincidunt ante semper sed. 
-                    Nullam vel nibh eu orci bibendum pulvinar.
-                </p>
+            {/* <div className='AddPlants-by-name'>
+                
+            </div> */}
+            <Link to={`gallery`}>
+                Plants can be added from the gallery page.
             </Link>
         </div>
     );
