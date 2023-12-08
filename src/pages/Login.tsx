@@ -10,7 +10,7 @@ function Login() {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) navigate("/");
-  }, [user]);
+  }, [user, navigate]);
   return (
     <div className="login">
       <div className="container">
