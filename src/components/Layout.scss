@@ -11,6 +11,8 @@
 #navbar {
     position: fixed;
     width: 100vw;
+    box-sizing: border-box;
+    padding-right: 20px;
     height: 10vh;
     min-height: 40px;
     margin: 0;
@@ -21,8 +23,6 @@
     align-items: center;
     z-index: 49;
     color: $background-brown;
-    box-sizing: border-box;
-    padding-right: 15px;
 }
 
 .navbar-group {

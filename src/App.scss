@@ -3,6 +3,7 @@
 
 .App {
   text-align: center;
+  transition: ease font-size 0.5s;
   width: 100vw;
 }
 
@@ -43,17 +44,24 @@
 
 body {
   font-size: 10pt;
+  font-family: 'Libre Baskerville', serif;
   color: $text-dark;
   background-color: $background-brown;
   margin-top: max(10vh, 40px); // navbar offset
 }
 
 html {
-  // scrollbar-gutter: stable;
+  scrollbar-gutter: stable;
+}
+
+button, input {
+  font-family: 'Libre Baskerville', serif;
 }
 
 h1 {
   color: $text-light;
+  margin-top: 80px;
+  margin-bottom: 10px;
 }
 
 @media screen and (min-width: 480px) {
