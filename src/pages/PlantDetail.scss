@@ -1,110 +1,52 @@
 @import '../variables.scss';
 
-.PlantDetail {
+.plant-detail {
+    width: 70%;
+    min-width: 800px;
+    height: 80vh;
+    padding-top: max(2vh, 40px);
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 20px;
+    overflow: hidden;
 }
-.PlantDetail-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: $black-border;
-    margin: 50px;
-    padding: 50px;
-    background-color: $container-color;
-    border-radius: $large-border-radius;
+
+$radius: 10px;
+
+.detail-image {
+    width: 40%;
+    object-fit: cover;
+    border-radius: $radius 0 0 $radius;
+    position: relative;
 }
-.PlantDetail-header {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    font-size: xx-large;
-    font-weight: bold;
-    padding: 20px;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
+
+.plant-details {
+    position: relative;
+    width: 60%;
+    border-radius: 0 $radius $radius 0;
+    box-sizing: border-box;
+    margin: 0 10px;
+    padding: 30px;
+    background-color: $manilla;
+    color: $text-dark;
 }
-.scientific-name {
-    margin-left: 1vh;
-    font-style: italic;
+
+.detail-title {
+    font-size: 1.2em;
+    margin: 0;
 }
-.PlantDetail-info {
-    font-size: x-large;
-    padding: 20px;
-    ul {
-        list-style: none;
-        padding: 20px;
-        margin: 0;
-        background-color: $item-color;
-        border-radius: $small-border-radius;
-    
-        li {
-            font-weight: bold;
-            font-size: large;
-            margin-bottom: 5px;
-        }
-    }
+
+.plant-details .plant-species {
+    font-size: 0.8em;
 }
-.PlantDetail-img {
-    flex: 1;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
-    padding: 20px;
-    img {
-        // max-width: fit-content;
-        max-width: 75%;
-        max-height: 75%;
-        border-radius: $small-border-radius;
-    }
+
+.detail-description {
+    font-size: 0.9em;
+    text-align: justify;
 }
-.PlantDetail-controls {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-}
-.add-button {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 20px;
-    margin: 0 0 20px 0;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
-    border: 0px;
-}
-.button-icon {
-    flex: 1;
-    padding: 0 10px 0 10px;
-    img {
-        max-width: 75px;
-        max-height: 75px;
-        border-radius: 50%;
-    }
-}
-.button-label {
-    flex: 1;
-    padding: 0 10px 0 10px;     
-    font-size: large;
-}
-.prev-button {
-    flex: 1;
-    font-size: large;
-    padding: 0 10px 0 10px;
-    margin: 0 10px 0 10px;
-    text-decoration: none;
-    color: black;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
+
+.detail-stats {
+    font-size: 0.9em;
+    column-count: 2;
+    text-align: left;
 }
