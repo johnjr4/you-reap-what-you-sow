@@ -1,7 +1,7 @@
 image: node:latest
 
 variables:
-  PUBLIC_URL: https://collinmccormickk.gitlab.io/409final
+  PUBLIC_URL: /409final
 
 
 cache:
