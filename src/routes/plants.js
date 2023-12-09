@@ -1,10 +1,10 @@
 
-const Plant = require('../models/plant')
+const Plant = require('../models/plantdetail')
 const User = require('../models/user')
 const Reminder = require('../models/reminder')
 
 module.exports = function (router) {
-    router.get('/api/plants', async (req, res) => {
+    router.get('/plants', async (req, res) => {
         try{
             const whereQuery = req.query.where ? JSON.parse(req.query.where): {};
             const count = req.query.count || false;
@@ -28,7 +28,7 @@ module.exports = function (router) {
 
     // POST
     // Create a new plant.Respond with details of new plant
-    router.post('/api/plants', async (req, res) => {
+    router.post('/plants', async (req, res) => {
         try {
             // Check if 'id' and 'common_name' are provided in the request
             if (!req.body.id || !req.body.common_name) {
@@ -58,10 +58,10 @@ module.exports = function (router) {
     // GET
     //GOOD
     // Respond with details of specified plant or 404 error
-    router.get('/api/plants/:id', async(req, res) => {
+    router.get('/plants/:id', async(req, res) => {
         try {
             const selectFields = req.query.select ? JSON.parse(req.query.select) : {};
-            const plant = await Plant.findById(req.params.id).select(selectFields).exec();
+            const plant = await Plant.find({id: req.params.id}).select(selectFields).exec();
             if (!plant) {
                 return res.status(404).json({ message: 'No plant found', data: '' });
             }
