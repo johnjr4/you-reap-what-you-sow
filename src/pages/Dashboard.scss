@@ -1,5 +1,4 @@
 @import '../variables.scss';
-@import './Gallery.scss';
 .Dashboard {
     display: flex;
     flex-direction: column;
@@ -88,7 +87,7 @@
   }
 
   .Reminders-container {
-    flex: 0.5;
+    flex: 0.75;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -146,51 +145,14 @@
   }
   .view-toggle {
     flex: 1;
-    padding: 10px;
-    margin-right: 10px;
+    padding: 10px 5px;
+    margin: 0 5px;
     text-align: center;
     color: black;
-    font-size: large;
+    font-size: 0.8em;
     border: 0px;
     background-color: $item-color;
     border-radius: $small-border-radius;
-  }
-
-  .filter-button {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: 0px;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
-    padding: 5px;
-    margin-right: 10px;
-    justify-content: space-around;
-
-    label {
-        font-size: large;
-        margin-left: 10px;
-    }
-  }
-
-  .search-bar {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    padding: 5px;
-    border: 0px;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
-    justify-content: space-around;
-    text-align: left;
-    align-items: center;
-  }
-
-  .search-bar-textbox {
-    font-size: large;
-    margin: 0 10px;
-
   }
 
   .button-icon {
@@ -291,5 +253,100 @@
   }
 
 
-
+// My Plants Gallery styling
+.MyPlants-gallery-filters {
+    flex: 1;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+  }
   
+  .MyPlants-gallery-filter-btn {
+    border-radius: 150vw; // Very large to guarantee capsule shape
+    min-width: 80px;
+    min-height: 40px;
+    flex: 1;
+    margin: 0 5px;
+    background-color: $paper;
+    // color: $background-brown;
+    font-size: 0.6em;
+    &:active {
+        color: white;
+        background-color: $logo-dark;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.MyPlants-masonry {
+    width: 95%;
+    min-width: 400px;
+    column-count: 4;
+    column-gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    list-style-type: none;
+    padding: 0;
+
+    // line-height: 0;
+}
+
+$border-width: 3px;
+.MyPlants-plant-card {
+    width: 100%;
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: 10px - 2 * $border-width;
+    border-radius: 3px;
+    border: $border-width solid transparent;
+    img {
+        display: block;
+        width: 100%;
+    }
+    &:hover {
+        // background-color: green;
+        border: $border-width solid $plant-green;
+        transition: all 0.1s linear;
+        > * {
+            transition: all 0.1s linear;
+        }
+        .MyPlants-plant-des {
+            visibility: visible;
+            opacity: 1;
+        }
+        img {
+            filter: brightness(40%);
+            // -webkit-filter: brightness(50%);
+        }
+    }
+}
+
+.MyPlants-plant-des {
+    z-index: 1;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+
+    text-decoration: none;
+    color: $paper;
+    overflow: hidden;
+
+    visibility: hidden;
+    opacity: 0;
+
+    > * {
+        margin: 0;
+    }
+}
+
+.MyPlants-plant-name {
+    font-size: 1em;
+}
+.MyPlants-plant-species {
+    font-size: 0.8em;
+}
