@@ -2,11 +2,11 @@ import PlantObject from './PlantObject.tsx'
 import ReminderObject from './ReminderObject.tsx'
 
 type UserObject = {
-    id: number,
+    id: any,
     name: string,
     email: string,
     picture_path: any,
-    plants: Array<PlantObject>,
+    plants: Array<number>,
     reminders: Array<ReminderObject>
 }
   export default UserObject;

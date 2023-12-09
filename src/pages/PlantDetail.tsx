@@ -92,8 +92,21 @@ function PlantDetail() {
     </div>
   );
 }
-
 export default PlantDetail
+
+function GetPrevDetail(plantId) {
+  if (plantId === 1) {
+    return 1;
+  }
+  return plantId - 1;
+}
+function GetNextDetail(plantId) {
+ // temp 
+  if (plantId === 30) {
+    return 30;
+  }
+  return plantId + 1;
+}
 
 function AddPlantToUser(props :{userId:any, plantId:any}) {
   const userId = props.userId;
@@ -117,21 +130,21 @@ function AddPlantToUser(props :{userId:any, plantId:any}) {
   } else {
       setFailed(true);
   }
-  let userQuery = test_users.find(user => user.id === Number(userId));
+  let userQuery = updated_users.find(user => user.id === String(userId));
   if (userQuery) {
       setUserObj({
-          id: userQuery.id,
-          name: userQuery.name,
-          email: userQuery.email,
-          picture_path: userQuery.picture_path,
-          plants: GetTestPlantData3(userQuery.plants),
-          reminders: GetTestReminderData3(userQuery.reminders)
+        id: userQuery.id,
+        name: userQuery.name,
+        email: userQuery.email,
+        picture_path: userQuery.picture_path ? userQuery.picture_path : no_img,
+        plants: userQuery.plants,
+        reminders: ReminderJSON_to_Obj(userQuery.reminders)
       })
   }
   if (userObj && plantObj) {
       const updatedUserObj: UserObject = {
           ...userObj,
-          plants: [...userObj.plants, plantObj]
+          plants: [...userObj.plants, plantObj.id]
       };
 
       // Update the state with the new user object
