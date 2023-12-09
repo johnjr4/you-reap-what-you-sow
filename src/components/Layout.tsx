@@ -11,7 +11,7 @@ function Layout(props: { user: User | undefined | null }) {
   const user = props.user;
   const email = user?.email;
   const name = user?.displayName;
-  const photo = String(user ? user.photoURL : "/default_pfp.svg");
+  const photo = String(user?.photoURL ? user.photoURL : "/default_pfp.svg");
 
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function Layout(props: { user: User | undefined | null }) {
         >
           <p className="navbar-name">{name}</p>
           <img
-            className="modal-pfp pfp"
+            className="navbar-pfp pfp"
             src={photo}
             alt="profile picture"
             referrerPolicy="no-referrer"
