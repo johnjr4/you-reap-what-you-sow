@@ -7,10 +7,11 @@
     // background-color: rgb(231, 246, 244);
   }
   .Dashboard-top-half {
+    flex: 1;
     display: flex;
     flex-direction: row;
-    flex: 1;
-    padding: 20px;
+    padding: 3%;
+    justify-content: space-between;
     box-sizing: border-box;
   }
 
@@ -18,8 +19,8 @@
     display: flex;
     flex: 1;
     flex-direction: row;
-    margin: 20px 20px 10px 20px;
-    padding: 20px;
+    margin-right: 1.5%;
+    padding: 2%;
     box-sizing: border-box;
     background-color: $container-color;
     border: $black-border;
@@ -29,13 +30,14 @@
 
   .profile-pic {
     flex: .5;
-    margin-right: 10px;
+    margin-right: 1%;
     img {
         border: $black-border;
         border-radius: 50%;
-        width: 100px;
-        height: 100px;
-        margin-bottom: 10px; 
+        min-width: 75px;
+        width: 75%;
+        aspect-ratio: 1;
+        margin-bottom: 1%; 
     }
   }
 
@@ -44,30 +46,33 @@
     display: flex;
     flex-direction: column;
     text-align: left;
+    // justify-content: start;
+    align-items: start;
+    min-width: 300px;
+  }
 
-    .profile-header {
-      text-align: left;
-      font-weight: bold;
-      font-size: xx-large;
-      margin-bottom: 10px;
-      padding: 20px 0 5px 0;
-    //   background-color: rgb(221, 221, 217);
-    //   border-radius: 1cap;
-    }
+  .profile-header {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+    font-size: xx-large;
+    margin-bottom: 1%;
+    padding: 2%
 
-    ul {
-        list-style: none;
-        padding: 20px;
-        margin: 0;
-        background-color: $item-color;
-        border-radius: $small-border-radius;
-    
-        li {
-            font-weight: bold;
-            font-size: large;
-            margin-bottom: 5px;
-        }
-    }
+  }
+  .profile-info-data {
+    list-style: none;
+    // padding: 5% 10%;
+    padding: 5% 5%;
+    // min-width: 300px;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+    li {
+          // font-weight: bold;
+          font-size: large;
+          // padding: 1%;
+          // margin-bottom: 5px;
+      }    
   }
   
   .profile-management {
@@ -91,8 +96,8 @@
     flex: 0.75;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    margin: 20px 20px 10px 20px;
+    padding: 2%;
+    margin-left: 1.5%;
     background-color: $container-color;
     border: $black-border;
     border-radius: $large-border-radius;
@@ -101,7 +106,8 @@
   .Reminders-header {
     display: flex;
     flex-direction: row;
-    margin: 5px 10px 5px 5px;    
+    // margin: ;
+    padding: 1%;    
     align-items: center;
   }
 
@@ -109,7 +115,7 @@
     text-align: left;
     font-size: xx-large;
     font-weight: bold;
-    margin-right: 15px;
+    margin-right: 0.5em;
   }
   .reminder-text {
     font-size: large;
@@ -120,37 +126,39 @@
     display: flex;
     flex-direction: row;
     flex: 1;
-    padding: 20px;
+    padding: 3%;
     box-sizing: border-box;
     justify-content: space-between;
-    // border: 3px solid #932424;
   }
   
+  $border-width: 3px;
   .MyPlants-container {
     flex: 1;
-    padding: 10px;
-    margin: 10px 20px 20px 20px;
+    padding: 2%;
+    // margin: 10px 20px 20px 20px;
+    margin-right: 1.5%;
     background-color: $container-color;
     border: $black-border;
     border-radius: $large-border-radius;
+    min-width: 550px;
   }
 
   .MyPlants-header {
     flex: 1;
     display: flex;
     flex-direction: row;
-    padding: 5px;
+    padding: 2%;
     justify-content: space-between;
     text-align: left;
     align-items: center;
   }
   .view-toggle {
-    flex: 1;
-    padding: 10px 5px;
-    margin: 0 5px;
+    flex: 0.5;
+    padding: 1% 0;
+    margin: 0 1%;
     text-align: center;
     color: black;
-    font-size: 0.8em;
+    font-size: 0.9em;
     border: 0px;
     background-color: $item-color;
     border-radius: $small-border-radius;
@@ -166,7 +174,7 @@
     flex: 1;
     font-size: xx-large;
     font-weight: bold;
-    padding: 0 0 0 10px;
+    padding: 1%;
   }
   
 
@@ -221,6 +229,13 @@
     background-color: $item-color;
     border-radius: $small-border-radius;
     font-size: large;
+    &:hover {
+      border: $border-width solid $plant-green;
+      transition: all 0.1s linear;
+      > * {
+          transition: all 0.1s linear;
+      }
+    }
 
     .plant-pic {
         flex: 1;
@@ -250,21 +265,21 @@
 .MyPlants-gallery-filters {
     flex: 1;
     margin-left: auto;
-    margin-right: auto;
-    width: 80%;
+    // margin-right: auto;
+    width: 100%;
     display: flex;
     justify-content: space-around;
   }
   
   .MyPlants-gallery-filter-btn {
     border-radius: 150vw; // Very large to guarantee capsule shape
-    min-width: 80px;
+    min-width: 65px;
     min-height: 40px;
     flex: 1;
     margin: 0 5px;
     background-color: $paper;
     // color: $background-brown;
-    font-size: 0.6em;
+    font-size: auto;
     &:active {
         color: white;
         background-color: $logo-dark;
@@ -287,7 +302,6 @@
     // line-height: 0;
 }
 
-$border-width: 3px;
 .MyPlants-plant-card {
     width: 100%;
     position: relative;
@@ -346,9 +360,8 @@ $border-width: 3px;
 
 .AddPlants-container {
   flex: .5;
-  margin: 10px 20px 20px 20px;
-  // max-height: 15%;
-  padding: 10px;
+  margin-left: 1.5%;
+  padding: 2%;
   background-color: $container-color;
   border: $black-border;
   border-radius: $large-border-radius;
@@ -357,20 +370,25 @@ $border-width: 3px;
   align-items: center;
 }
 .AddPlants-title {
-  flex:1;
+  // flex:0.5;
   font-size: xx-large;
-  padding: 25px;
+  padding: 2%;
+  font-weight: bold;
 }
 .AddPlants-by-search {
-  flex: 1;
-  padding: 25px 0;
+  // flex: 1;
+  padding: 2% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .AddPlants-search-results-list {
+  padding: 0;
   list-style: none;
   button {
     font-size: large;
-    padding: 10px 0 10px 0;
-    margin-bottom: 10px;
+    padding: 5%;
+    margin-bottom: 2%;
     background-color: $item-color;
     border-radius: $small-border-radius;
     border: 0px;
@@ -389,16 +407,19 @@ $border-width: 3px;
   }
 }
 .AddPlants-by-gallery {
-  flex: 1;
-  padding: 25px;
+  // flex: 1;
+  // padding: 2%;
   text-decoration: none;
   font-size: large;
 }
 .AddPlants-link {
-  background-color: $item-color;
+  // background-color: $item-color;
   border-radius: $small-border-radius;
-  border: 0px;
-  padding: 10px;
   text-decoration: none;
   color: black;
+    p {
+      background-color: $paper;
+      padding: 3%;
+      border-radius: $small-border-radius;
+    }
 }
