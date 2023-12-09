@@ -13,6 +13,7 @@ import GetTestReminderData3 from '../dev/GetTestReminderData3.tsx';
 import ReminderJSON_to_Obj from '../dev/ReminderJSON _to_Obj.tsx';
 import PlantIdArr_to_PlantObjArr from '../dev/PlantIdArr_to_PlantObjArr.tsx';
 import { auth, db, logout } from "../firebase";
+import Fuse from 'fuse.js';
 
 
 function GetUserData2(data) {
@@ -61,11 +62,11 @@ function GetUserData2(data) {
             {/* <p>{JSON.stringify(userObj)}</p> */}
             <div className='Dashboard-top-half'>
                 <MyProfile user={userObj}/>
-                <AddPlants />
+                <Reminders user={userObj}/>
             </div>
             <div className='Dashboard-bottom-half'>
-                <Reminders user={userObj}/>
                 <MyPlants user={userObj}/>
+                <AddPlants userObject={userObj} setUserObject={setUserObj}/>
             </div>
         </div>
     );
@@ -121,7 +122,7 @@ function MyPlants(props: {user:UserObject}) {
     const [viewMode, setViewMode] = useState('list');
     const filters = ['Annuals', 'Perennials', 'Biennials', 'Vegetables', 'Trees', 'Flowers']
     const data = page1;
-    // replace with api call
+    // replace with api call. Fetches all plants from user's plant list of plantIds
     useEffect(() => {
         const fetchPlantData = async () => {
           try {
@@ -259,7 +260,6 @@ function GalleryListItem(props: {plant : PlantObject}) {
     );
 }
 
-
 function ViewToggle( {viewMode, setViewMode} ) {
     return (
       <div className='toggle-switch'>
@@ -286,8 +286,8 @@ function ViewToggle( {viewMode, setViewMode} ) {
   }
 
 function plantFilter(idx, plant) {
-    console.log(`Checking ${plant} against filter ${idx}`);
-    console.log(plant);
+    // console.log(`Checking ${plant} against filter ${idx}`);
+    // console.log(plant);
     switch (idx) {
         case 1:
             return plant.cycle === "Annual"
@@ -359,15 +359,108 @@ function RemindersListView(props: {reminders:Array<ReminderObject>}) {
 }
 
 
-function AddPlants() {
-    return(
-        <div className='AddPlants-container'>
-            {/* <div className='AddPlants-by-name'>
-                
-            </div> */}
-            <Link to={`gallery`}>
-                Plants can be added from the gallery page.
-            </Link>
-        </div>
-    );
+function AddPlants({userObject, setUserObject}) {
+    const [isLoading, setLoading] = useState(true);
+    const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
+    const [plantFuse, setPlantFuse] = useState<Fuse>();
+    const [query, setQuery] = useState("");
+    const { userId } = useParams();
+    // const AddPlantToUserTest2 = (plantId) => {
+    //     console.log(`clicked add plant to user ${userId}`);
+    // };
+    function AddPlantToUserTest(plantId) {
+        // locally adds to the plants array, change to add thru api
+        console.log(`clicked add plant ${plantId} to user ${userId}`);
+        console.log(userObject.plants);
+        setUserObject({
+            ...userObject,
+            plants: [...userObject.plants, plantId]
+        })
+        console.log(userObject.plants);
+    }
+
+    useEffect(() => {
+        // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`) 
+        // .then( async response => {
+            // // console.log(response);
+            // const plantResponse = response.data.data.map((plant: any)=> {
+                //     // console.log('heere! 25')
+                //     return {
+                    //     id: plant.id,
+                    //     common_name: plant.common_name,
+                    //     scientific_name: plant.scientific_name[0],
+                    //     default_image: plant.default_image ? plant.default_image.original_url : no_img,
+                    
+                    //     }
+                    // });
+                    // //console.log(plantResponse)
+        // setPlantObjects(plantResponse);
+        // setLoading(false);
+        // })
+        // .catch(() => {
+        //     console.log('you messed up')
+        // });
+
+        // Uncomment above and delte below! Local JSON is just for developing UI without burning through API calls
+        const plantResponse = page1.map((plant: any) => {
+            return {
+                id: plant.id,
+                common_name: plant.common_name,
+                scientific_name: plant.scientific_name[0],
+                default_image: plant.default_image ? plant.default_image.original_url : no_img,
+                cycle: plant.cycle,
+                watering: plant.watering
+            }
+        });
+        setPlantObjects(plantResponse);
+        const fuse = new Fuse(plantResponse, {
+            keys: ['common_name']
+        })
+        setPlantFuse(fuse);
+        setLoading(false);
+        // End dev test code
+    }, []);
+    
+    if (isLoading) {
+        return (
+            <div>Loading</div>
+        );
+    } else {
+        return (
+            <div className='AddPlants-container'>
+                <span className='Add-Plants-title'>Add Plants</span>
+                <div className='AddPlants-by-search'>
+                    <input 
+                        type='text'
+                        id='search-bar'
+                        placeholder='Search for a plant to add...'
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className='AddPlants-search-results-list'>
+                        {query !== "" ? (
+                            plantFuse.search(query).map((p:any) => {
+                                return (
+                                    <li key={p.id}>
+                                        <button 
+                                            className='AddPlants-search-result' 
+                                            onClick={() => AddPlantToUserTest(p.item.id)}
+                                        >
+                                            <label>{p.item.common_name}</label>
+                                        </button>
+                                    </li>
+                                );
+                            })
+                        ) : (
+                            <div></div>
+                        )}
+                    </ul>
+                    <div className='AddPlants-by-gallery'>
+                        <Link to='gallery' className='AddPlants-link'>
+                            Add a plant from the gallery page.
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }

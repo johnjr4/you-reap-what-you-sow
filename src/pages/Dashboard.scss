@@ -91,7 +91,7 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
-    margin: 10px 20px 20px 20px;
+    margin: 20px 20px 10px 20px;
     background-color: $container-color;
     border: $black-border;
     border-radius: $large-border-radius;
@@ -243,14 +243,6 @@
 
   }
 
-  .AddPlants-container {
-    flex: .5;
-    margin: 20px 20px 10px 20px;
-    padding: 10px;
-    background-color: $container-color;
-    border: $black-border;
-    border-radius: $large-border-radius;
-  }
 
 
 // My Plants Gallery styling
@@ -349,4 +341,63 @@ $border-width: 3px;
 }
 .MyPlants-plant-species {
     font-size: 0.8em;
+}
+
+.AddPlants-container {
+  flex: .5;
+  margin: 10px 20px 20px 20px;
+  // max-height: 15%;
+  padding: 10px;
+  background-color: $container-color;
+  border: $black-border;
+  border-radius: $large-border-radius;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.AddPlants-title {
+  flex:1;
+  font-size: xx-large;
+  padding: 25px;
+}
+.AddPlants-by-search {
+  flex: 1;
+  padding: 25px 0;
+}
+.AddPlants-search-results-list {
+  list-style: none;
+  button {
+    font-size: large;
+    padding: 10px 0 10px 0;
+    margin-bottom: 10px;
+    background-color: $item-color;
+    border-radius: $small-border-radius;
+    border: 0px;
+    list-style-type: none;
+    &:hover {
+      // background-color: green;
+      border: $border-width solid $plant-green;
+      transition: all 0.1s linear;
+      > * {
+          transition: all 0.1s linear;
+      }
+    }
+  }
+  label {
+    text-align: center;
+  }
+}
+.AddPlants-by-gallery {
+  flex: 1;
+  padding: 25px;
+  text-decoration: none;
+  font-size: large;
+}
+.AddPlants-link {
+  background-color: $item-color;
+  border-radius: $small-border-radius;
+  border: 0px;
+  padding: 10px;
+  text-decoration: none;
+  color: black;
 }
