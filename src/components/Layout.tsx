@@ -33,7 +33,7 @@ function Layout() {
         <div>{user?.email}</div> */}
         <img
           className="navbar-logo"
-          src="/logo192.png"
+          src="/logo.png"
           alt='website logo'
         />
         <Link className="page-link navbar-group" to={`user/${user?.uid}/gallery`}>
