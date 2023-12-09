@@ -13,6 +13,7 @@ import GetTestReminderData3 from '../dev/GetTestReminderData3.tsx';
 import ReminderJSON_to_Obj from '../dev/ReminderJSON _to_Obj.tsx';
 import PlantIdArr_to_PlantObjArr from '../dev/PlantIdArr_to_PlantObjArr.tsx';
 import { auth, db, logout } from "../firebase";
+import { User } from "firebase/auth";
 
 
 function GetUserData2(data) {
@@ -310,25 +311,58 @@ function plantFilter(idx, plant) {
 }
 
 
-function Reminders(props: {user:UserObject}) {
-    const user = props.user;
-    const currentDate = new Date();
-    return (
-        <div className='Reminders-container'>
-            <div className='Reminders-header'>
-                <span className='Reminders-header-title'>
-                    {`Reminders - ${currentDate.toLocaleDateString('en-US')}`}
-                </span>
-                <img
-                    className='button-icon'
-                    src='../logo192.png'
-                    alt='reminders icon'
-                />                
-            </div>
-
-            <RemindersListView reminders={user.reminders} />
+function MyPlantsGalleryView(props: { my_plants: Array<PlantObject> }) {
+  const my_plants = props.my_plants;
+  return (
+    <div>
+      <div className="gallery-filters">
+        <button type="button" className="gallery-filter-btn">
+          Annuals
+        </button>
+        <button type="button" className="gallery-filter-btn">
+          Perennials
+        </button>
+        <button type="button" className="gallery-filter-btn">
+          Biennials
+        </button>
+        <button type="button" className="gallery-filter-btn">
+          Vegetables
+        </button>
+        <button type="button" className="gallery-filter-btn">
+          Flowers
+        </button>
+        <button type="button" className="gallery-filter-btn">
+          Trees
+        </button>
+      </div>
+      <ul className="masonry">
+        {my_plants.map((p, index) => {
+          return (
+            <li key={index}>
+              <GalleryListItem plant={p} />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+function GalleryListItem(props: { plant: PlantObject }) {
+  const plant = props.plant;
+  const { userId } = useParams();
+  return (
+    <Link to={`/user/${userId}/detail/${plant.id}`}>
+      <div className="plant-card">
+        <div className="plant-des">
+          <h3 className="plant-name">{`#${plant.id}: ${plant.common_name}`}</h3>
+          <p className="plant-species">
+            <i>{plant.scientific_name}</i>
+          </p>
         </div>
-    );
+        <img src={plant.default_image} alt={plant.common_name} />
+      </div>
+    </Link>
+  );
 }
 function RemindersListView(props: {reminders:Array<ReminderObject>}) {
     const reminders = props.reminders;
@@ -346,18 +380,22 @@ function RemindersListView(props: {reminders:Array<ReminderObject>}) {
     if (reminderMessages.length === 0) {
         reminderMessages = ['No reminders for today.'];
     }
+  });
 
-    return (
-        <div className="reminder-list">
-            {reminderMessages.map(reminderMessage => (
-                <div className='list-row' key={reminderMessage}>
-                    <span className='reminder-text'>{reminderMessage}</span>
-                </div>
-            ))}
+  if (reminderMessages.length === 0) {
+    reminderMessages = ["No reminders for today."];
+  }
+
+  return (
+    <div className="reminder-list">
+      {reminderMessages.map((reminderMessage) => (
+        <div className="list-row" key={reminderMessage}>
+          <span className="reminder-text">{reminderMessage}</span>
         </div>
-    );
+      ))}
+    </div>
+  );
 }
-
 
 function AddPlants() {
     return(

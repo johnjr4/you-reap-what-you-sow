@@ -3,29 +3,23 @@ import { Link, Outlet } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../firebase";
-import { query, collection, getDocs, where } from "firebase/firestore";
 import "./Layout.scss";
+import { User } from "firebase/auth";
 
-function Layout() {
-  const [user, loading] = useAuthState(auth);
-  const [name, setName] = useState("");
+function Layout(props: { user: User | undefined | null }) {
+  // const [user, loading] = useAuthState(auth);
+  const user = props.user;
+  const email = user?.email;
+  const name = user?.displayName;
+  const photo = String(user ? user.photoURL : "/default_pfp.svg");
+
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const fetchUserName = async () => {
-    try {
-      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-      const doc = await getDocs(q);
-      const data = doc.docs[0].data();
-      setName(data.name);
-    } catch (error) {
-      console.log("An error occured while fetching user data");
-    }
-  };
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/login");
-    fetchUserName();
-  }, [user, loading]);
+
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (!user) return navigate("/login");
+  // }, [user, loading]);
   return (
     <div id="layout">
       <nav id="navbar">
@@ -33,41 +27,53 @@ function Layout() {
         <div>{user?.email}</div> */}
         <img
           className="navbar-logo"
-          src="/logo192.png"
+          src="/logo.png"
           alt='website logo'
         />
         <Link className="page-link navbar-group" to={`user/${user?.uid}/gallery`}>
           <div onClick={() => setShowModal(false)}>Browse Plants</div>
         </Link>
-        <div onClick={() => setShowModal(!showModal)} className="user-details navbar-group">
+        <div
+          onClick={() => setShowModal(!showModal)}
+          className="user-details navbar-group"
+        >
           <p className="navbar-name">{name}</p>
-          {/* TODO: Replace this with acutal user pfp */}
-          <img 
-            className="navbar-pfp pfp"
-            src='/default_pfp.svg'
-            alt='profile picture'
+          <img
+            className="modal-pfp pfp"
+            src={photo}
+            alt="profile picture"
+            referrerPolicy="no-referrer"
           />
         </div>
       </nav>
-      {showModal?
-      <div className="user-modal">
-        <div className="modal-group user-overview">
-          <div className='modal-user-details'>
-            <p><b>{name}</b></p>
-            <p>placeholder@gmail.com</p>
+      {showModal ? (
+        <div className="user-modal">
+          <div className="modal-group user-overview">
+            <div className="modal-user-details">
+              <p>
+                <b>{name}</b>
+              </p>
+              <p>{email}</p>
+            </div>
+            <img
+              className="modal-pfp pfp"
+              src={photo}
+              alt="profile picture"
+              referrerPolicy="no-referrer"
+            />
           </div>
-          <img className="modal-pfp pfp" src='/default_pfp.svg' alt='profile picture'/>
-        </div>
-        <Link className="modal-group page-link modal-btn" to={`user/${user?.uid}`} onClick={() => setShowModal(false)}>
+          <Link
+            className="modal-group page-link modal-btn"
+            to={`user/${user?.getIdToken()}`}
+            onClick={() => setShowModal(false)}
+          >
             My Dashboard
-        </Link>
-        <div className="modal-group logout-btn modal-btn" onClick={logout}>
-          Logout
+          </Link>
+          <div className="modal-group logout-btn modal-btn" onClick={logout}>
+            Logout
+          </div>
         </div>
-      </div>
-      :
-      null
-      }
+      ) : null}
       <Outlet />
     </div>
   );
