@@ -10,7 +10,9 @@
 
 #navbar {
     position: fixed;
-    width: 100%;
+    width: 100vw;
+    box-sizing: border-box;
+    padding-right: 20px;
     height: 10vh;
     min-height: 40px;
     margin: 0;

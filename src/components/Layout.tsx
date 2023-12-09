@@ -23,11 +23,22 @@ function Layout(props: { user: User | undefined | null }) {
   return (
     <div id="layout">
       <nav id="navbar">
+<<<<<<< HEAD
         <img className="navbar-logo" src="/logo192.png" alt="website logo" />
         <Link
           className="page-link navbar-group"
           to={`user/${user?.getIdToken()}/gallery`}
         >
+=======
+        {/* <div>{name}</div>
+        <div>{user?.email}</div> */}
+        <img
+          className="navbar-logo"
+          src="/logo.png"
+          alt='website logo'
+        />
+        <Link className="page-link navbar-group" to={`user/${user?.uid}/gallery`}>
+>>>>>>> a674d3e4343035baf1f662afd99b0ef4890386d8
           <div onClick={() => setShowModal(false)}>Browse Plants</div>
         </Link>
         <div
