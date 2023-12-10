@@ -61,7 +61,7 @@ module.exports = function (router) {
     router.get('/plants/:id', async(req, res) => {
         try {
             const selectFields = req.query.select ? JSON.parse(req.query.select) : {};
-            const plant = await Plant.find({id: req.params.id}).select(selectFields).exec();
+            const plant = await Plant.findOne({id: req.params.id}).select(selectFields).exec();
             if (!plant) {
                 return res.status(404).json({ message: 'No plant found', data: '' });
             }
@@ -131,20 +131,26 @@ module.exports = function (router) {
     router.post('/api/users', async (req, res) => {
         try {
             // Check if 'name' and 'email' are provided in the request
-            if (!req.body.name || !req.body.email) {
-                return res.status(400).json({ message: 'Name and email are required' , data: ""});
+            if (!req.body.name || !req.body.email || !req.body.id) {
+                return res.status(400).json({ message: 'Name, email, and id are required' , data: ""});
             }
             // Check if a user with the same email already exists
-            const existingUser = await User.findOne({ email: req.body.email });
+            let existingUser = await User.findOne({ email: req.body.email });
             if (existingUser) {
                 return res.status(400).json({ message: 'User with this email already exists', data: "" });
+            }
+
+            existingUser = await User.findOne({id: req.body.id});
+            if (existingUser) {
+                return res.status(400).json({message: 'User with this id already exists', data: ""})
             }
             // Create a new user with specified fields and default values for others
             const user = new User({
                 name: req.body.name,
                 email: req.body.email,
+                id: req.body.id,
                 // Set default values for other fields as needed
-                picture_path: String,
+                picture_path: req.body.picture_path || "",
                 plants: req.body.plants || [],
                 reminders: req.body.reminders || []
             });
@@ -155,14 +161,32 @@ module.exports = function (router) {
             console.error(error);
             res.status(500).json({ message: error.message, data: "" });
         }
-    })
+    });
+
+    // Add a plant to a specific users list of plants
+    router.post('/users/:id/:plantid', async (req, res) => {
+        try {
+            const user = await User.findOne({id: req.params.id});
+            if (!user) {
+                res.status(404).json({message: "Person not found", data: ""});
+                return;
+            }
+            user.plants.push(Number(req.params.plantid));
+            user.save();
+            res.json({message: "Plant added to user's list", data: user});
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Internal Server Error', data: ""})
+        }
+    });
+
     // users /: id
     // GET
     // Respond with details of specified user or 404 error
     router.get('/api/users/:id', async (req, res) => {
         try {
             const selectFields = req.query.select ? JSON.parse(req.query.select) : {};
-            const user = await User.findById(req.params.id).select(selectFields);
+            const user = await User.findOne({id: req.params.id}).select(selectFields);
             if (!user) {
                 return res.status(404).json({ message: 'No user found', data: "" });
             }
@@ -198,12 +222,13 @@ module.exports = function (router) {
             res.status(500).json({ message: 'Internal Server Error', data: '' });
           }
     })
+
     // DELETE
     // Delete specified user or 404 error
     router.delete('/api/users/:id', getUser, async (req, res) => {
         try {
-            await res.user.remove()
-            res.json({message: "Deleted User", data: ""})
+            await User.deleteOne({"id": req.params.id });
+            res.json({message: "Deleted User", data: ""});
         } catch (error){
             res.status(500).json({message: error.message, data: ""})
         }
