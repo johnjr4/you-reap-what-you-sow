@@ -64,7 +64,7 @@ function Layout(props: { user: User | undefined | null }) {
           </div>
           <Link
             className="modal-group page-link modal-btn"
-            to={`user/${user?.getIdToken()}`}
+            to={`user/${String(user?.uid)}`}
             onClick={() => setShowModal(false)}
           >
             My Dashboard

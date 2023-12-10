@@ -30,7 +30,7 @@ function GetUserData2(props: { data: JSON; user: User }) {
         );
         setLoading(false);
         if (userQuery) {
-          // console.log(userQuery);
+// console.log(userQuery);
           setUserObj({
             id: userQuery.id,
             name: userQuery.name,
@@ -75,6 +75,7 @@ function GetUserData2(props: { data: JSON; user: User }) {
   );
 }
 export default function Dashboard(props: { user: User | undefined | null }) {
+  console.log('in dashboard');
   return (
     // <div className='Dashboard'>
     //     <div className='Dashboard-top-half'>
@@ -138,6 +139,7 @@ function MyPlants(props: { user: UserObject }) {
     "Flowers",
   ];
   const data = page1;
+  console.log(JSON.stringify(user));
   // replace with api call. Fetches all plants from user's plant list of plantIds
   useEffect(() => {
     const fetchPlantData = async () => {
@@ -178,9 +180,9 @@ function MyPlants(props: { user: UserObject }) {
       setFilterNum(idx);
     }
   }
-  if (isFailed) {
-    return <div>Failed to load plants</div>;
-  }
+  // if (isFailed) {
+  //   return <div>Failed to load plants</div>;
+  // }
   if (isLoading) {
     return <div>Loading your plants...</div>;
   } else {
@@ -388,108 +390,114 @@ function RemindersListView(props: { reminders: Array<ReminderObject> }) {
   );
 }
 
-function AddPlants({ userObject, setUserObject }) {
-  const [isLoading, setLoading] = useState(true);
-  const [plantObjs, setPlantObjects] = useState<PlantObject[]>([]);
-  const [plantFuse, setPlantFuse] = useState<Fuse>();
-  const [query, setQuery] = useState("");
-  const { userId } = useParams();
-  // const AddPlantToUserTest2 = (plantId) => {
-  //     console.log(`clicked add plant to user ${userId}`);
-  // };
-  function AddPlantToUserTest(plantId) {
-    // locally adds to the plants array, change to add thru api
-    console.log(`clicked add plant ${plantId} to user ${userId}`);
-    console.log(userObject.plants);
-    setUserObject({
-      ...userObject,
-      plants: [...userObject.plants, plantId],
-    });
-    console.log(userObject.plants);
-  }
+function AddPlants({userObject, setUserObject}) {
+    const [isLoading, setLoading] = useState(true);
+    const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
+    const [plantFuse, setPlantFuse] = useState<Fuse>();
+    const [query, setQuery] = useState("");
+    const { userId } = useParams();
+    // const AddPlantToUserTest2 = (plantId) => {
+    //     console.log(`clicked add plant to user ${userId}`);
+    // };
+    function AddPlantToUserTest(plant) {
+        // locally adds to the plants array, change to add thru api
+        console.log(`clicked add plant ${plant.id} to user ${userId}`);
+        console.log(userObject.plants);
+        const reminderToAdd:ReminderObject = {
+            id: plant.id,
+            plant_name: plant.common_name,
+            date: new Date(),
+            frequency: 1
+        }
+        setUserObject({
+            ...userObject,
+            plants: [...userObject.plants, plant.id]
+        })
+        console.log(userObject.plants);
+    }
 
-  useEffect(() => {
-    // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`)
-    // .then( async response => {
-    // // console.log(response);
-    // const plantResponse = response.data.data.map((plant: any)=> {
-    //     // console.log('heere! 25')
-    //     return {
-    //     id: plant.id,
-    //     common_name: plant.common_name,
-    //     scientific_name: plant.scientific_name[0],
-    //     default_image: plant.default_image ? plant.default_image.original_url : no_img,
+    useEffect(() => {
+        // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`) 
+        // .then( async response => {
+            // // console.log(response);
+            // const plantResponse = response.data.data.map((plant: any)=> {
+                //     // console.log('heere! 25')
+                //     return {
+                    //     id: plant.id,
+                    //     common_name: plant.common_name,
+                    //     scientific_name: plant.scientific_name[0],
+                    //     default_image: plant.default_image ? plant.default_image.original_url : no_img,
+                    
+                    //     }
+                    // });
+                    // //console.log(plantResponse)
+        // setPlantObjects(plantResponse);
+        // setLoading(false);
+        // })
+        // .catch(() => {
+        //     console.log('you messed up')
+        // });
 
-    //     }
-    // });
-    // //console.log(plantResponse)
-    // setPlantObjects(plantResponse);
-    // setLoading(false);
-    // })
-    // .catch(() => {
-    //     console.log('you messed up')
-    // });
-
-    // Uncomment above and delte below! Local JSON is just for developing UI without burning through API calls
-    const plantResponse = page1.map((plant: any) => {
-      return {
-        id: plant.id,
-        common_name: plant.common_name,
-        scientific_name: plant.scientific_name[0],
-        default_image: plant.default_image
-          ? plant.default_image.original_url
-          : no_img,
-        cycle: plant.cycle,
-        watering: plant.watering,
-      };
-    });
-    setPlantObjects(plantResponse);
-    const fuse = new Fuse(plantResponse, {
-      keys: ["common_name"],
-    });
-    setPlantFuse(fuse);
-    setLoading(false);
-    // End dev test code
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading</div>;
-  } else {
-    return (
-      <div className="AddPlants-container">
-        <span className="Add-Plants-title">Add Plants</span>
-        <div className="AddPlants-by-search">
-          <input
-            type="text"
-            id="search-bar"
-            placeholder="Search for a plant to add..."
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <ul className="AddPlants-search-results-list">
-            {query !== "" ? (
-              plantFuse.search(query).map((p: any) => {
-                return (
-                  <li key={p.id}>
-                    <button
-                      className="AddPlants-search-result"
-                      onClick={() => AddPlantToUserTest(p.item.id)}
-                    >
-                      <label>{p.item.common_name}</label>
-                    </button>
-                  </li>
-                );
-              })
-            ) : (
-              <div></div>
-            )}
-          </ul>
-          <div className="AddPlants-by-gallery">
-            <Link to="gallery" className="AddPlants-link">
-              Add a plant from the gallery page.
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+        // Uncomment above and delte below! Local JSON is just for developing UI without burning through API calls
+        const plantResponse = page1.map((plant: any) => {
+            return {
+                id: plant.id,
+                common_name: plant.common_name,
+                scientific_name: plant.scientific_name[0],
+                default_image: plant.default_image ? plant.default_image.original_url : no_img,
+                cycle: plant.cycle,
+                watering: plant.watering
+            }
+        });
+        setPlantObjects(plantResponse);
+        const fuse = new Fuse(plantResponse, {
+            keys: ['common_name']
+        })
+        setPlantFuse(fuse);
+        setLoading(false);
+        // End dev test code
+    }, []);
+    
+    if (isLoading) {
+        return (
+            <div>Loading</div>
+        );
+    } else {
+        return (
+            <div className='AddPlants-container'>
+                <span className='AddPlants-title'>Add Plants</span>
+                <div className='AddPlants-by-search'>
+                    <input 
+                        type='text'
+                        id='search-bar'
+                        placeholder='Search for a plant to add...'
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className='AddPlants-search-results-list'>
+                        {query !== "" ? (
+                            plantFuse.search(query).map((p:any) => {
+                                return (
+                                    <li key={p.id}>
+                                        <button 
+                                            className='AddPlants-search-result' 
+                                            onClick={() => AddPlantToUserTest(p.item)}
+                                        >
+                                            <label>{p.item.common_name}</label>
+                                        </button>
+                                    </li>
+                                );
+                            })
+                        ) : (
+                            <div></div>
+                        )}
+                    </ul>
+                  </div>
+                  <div className='AddPlants-by-gallery'>
+                      <Link to='gallery' className='AddPlants-link'>
+                          <p>Add a plant from the gallery page.</p>
+                      </Link>
+                  </div>
+            </div>
+        );
+    }
 }
