@@ -1,12 +1,17 @@
 @import '../variables.scss';
 
+.plant-detail-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
 .plant-detail {
     width: 70%;
     min-width: 800px;
     min-height: 80vh;
     padding-top: max(2vh, 40px);
-    margin-left: auto;
-    margin-right: auto;
+    // margin-left: auto;
+    // margin-right: auto;
     display: flex;
     overflow: hidden;
 }
@@ -49,4 +54,13 @@ $radius: 10px;
     font-size: 0.9em;
     column-count: 2;
     text-align: left;
+}
+
+.add-plant-btn {
+    min-height: 100px;
+    min-width: 100px;
+    max-height: 400px;
+    max-width: 400px;
+    height: 200px;
+    width: 200px;
 }
