@@ -12,7 +12,7 @@ module.exports = function (router) {
             const selectFields = req.query.select ? JSON.parse(req.query.select) : {};
             const skip = parseInt(req.query.skip) || 0;
             const limit = req.query.limit ? parseInt(req.query.limit) : 100;
-            const plants = await Plant.find(whereQuery).select(selectFields).sort(sort).skip(skip).limit(limit).exec();
+            const plants = await Plant.find().where(whereQuery).select(selectFields).sort(sort).skip(skip).limit(limit).exec();
 
             if (count === 'true'){
                 res.json({message: "Success", data: plants.length});
@@ -131,8 +131,8 @@ module.exports = function (router) {
     router.post('/api/users', async (req, res) => {
         try {
             // Check if 'name' and 'email' are provided in the request
-            if (!req.body.name || !req.body.email || !req.body.id) {
-                return res.status(400).json({ message: 'Name, email, and id are required' , data: ""});
+            if (!req.body.name || !req.body.email) {
+                return res.status(400).json({ message: 'Name and email required' , data: ""});
             }
             // Check if a user with the same email already exists
             let existingUser = await User.findOne({ email: req.body.email });
@@ -140,10 +140,10 @@ module.exports = function (router) {
                 return res.status(400).json({ message: 'User with this email already exists', data: "" });
             }
 
-            existingUser = await User.findOne({id: req.body.id});
-            if (existingUser) {
-                return res.status(400).json({message: 'User with this id already exists', data: ""})
-            }
+            // existingUser = await User.findOne({id: req.body.id});
+            // if (existingUser) {
+            //     return res.status(400).json({message: 'User with this id already exists', data: ""})
+            // }
             // Create a new user with specified fields and default values for others
             const user = new User({
                 name: req.body.name,
@@ -201,9 +201,18 @@ module.exports = function (router) {
         try {
             const userId = req.params.id;
             const updatedUserData = req.body;
-        
-            // Find the user by ID
-            const user = await User.findById(userId);
+            const userEmail = req.body.email;
+            const userName = req.body.name;
+
+
+            // First check if there is a user with the same id field (created by firebase)
+            const existingUser = await User.findOne({id: req.params.id});
+            if (existingUser) {
+                return res.status(400).json({message: 'User with this id (firebase) already exists', data: ""})
+            }
+
+            // We know that the user is not in this DB but has been assigned a firebase id, so find by email and username. In this case, the passed req.params.id can be anything
+            const user = await User.findOne({email: userEmail, name: userName});
         
             // Check if the user exists
             if (!user) {
