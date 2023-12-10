@@ -20,7 +20,9 @@ const defaultPlant = {
   default_image: no_img
 }
 
-const apiKey = "sk-8CuD6569732e1585c3236";
+// fucntion addPlantToUser() {
+
+// }
 
 function PlantDetail() {
   const { userId, plantId } = useParams();
@@ -31,31 +33,30 @@ function PlantDetail() {
 
 
   useEffect(() => {
-      // TODO: Replace with API call
-      const fetchPlantData = async () => {
-          // Dummy JSON data
-          let plantData = page1.find(plant => plant.id === 100);
-          // Real plant API call
-          // let plantData = await axios.get(`https://perenual.com/api/species/details/${plantId}?key=${apiKey}`)
-          if (plantData) {
-            // setPlantObj({
-            //   id: plantData.id,
-            //   common_name: plantData.common_name,
-            //   scientific_name: plantData.scientific_name[0],
-            //   cycle: plantData.cycle,
-            //   watering: plantData.watering,
-            //   default_image: plantData.default_image ? plantData.default_image.original_url : no_img,
-            // });
-            console.log(plantData);
-            setPlantObj(plantData);
-            // setPlantObj(plantData.data);
-          } else {
-            setFailed(true);
-          }
-          setLoading(false);
-      };
-      fetchPlantData();
+      try {
+        const fetchPlantData = async () => {
+            let plantData = await axios.get(`http://localhost:4001/api/plants/${plantId}`);
+            if (plantData) {
+              console.log(plantData);
+              setPlantObj(plantData.data.data);
+            } else {
+              setFailed(true);
+            }
+            setLoading(false);
+        };
+        fetchPlantData();
+      } catch (err) {
+        console.log(err);
+      }
   }, [plantId]);
+
+  async function addPlantToUser() {
+    try {
+      await axios.post(`http://localhost:4001/api/users/${userId}/${plantId}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -66,94 +67,106 @@ function PlantDetail() {
   }
 
   return (
-    <div className="plant-detail">
-      <img className="detail-image" src={plantObj!.default_image.original_url} alt={plantObj!.common_name}/>
-      <div className="plant-details">
-        <div className="detail-header">
-          <h2 className="detail-title"> 
-            Plant #{plantId}: {plantObj!.common_name}
-          </h2>
-          <span className='plant-species'><i>{plantObj!.scientific_name}</i></span>
+    <div className="plant-detail-wrapper">
+      <div className="plant-detail">
+        <img className="detail-image"
+          src={plantObj!.default_image ?
+            plantObj!.default_image.original_url
+            :
+            no_img
+          }
+          alt={plantObj!.common_name}
+          />
+        <div className="plant-details">
+          <div className="detail-header">
+            <h2 className="detail-title"> 
+              Plant #{plantId}: {plantObj!.common_name}
+            </h2>
+            <span className='plant-species'><i>{plantObj!.scientific_name}</i></span>
+          </div>
+          <div className='detail-description'>
+            {plantObj!.description}
+          </div>
+          <ul className='detail-stats'>
+            <li key="type"      >Type: {plantObj!.type}</li>
+            <li key="cycle"     >Cycle: {plantObj!.cycle}</li>
+            <li key="watering"  >Watering: {plantObj!.watering}</li>
+            <li key="flowers"   >Flowers: {plantObj!.flowers ? "Yes" : "No"}</li>
+            <li key="fruits"    >Fruits: {plantObj!.fruits ? "Yes" : "No"}</li>
+            <li key="invasive"  >Invasive: {plantObj!.invasive ? "Yes" : "No"}</li>
+            <li key="indoor"    >Indoor: {plantObj!.indoor ? "Yes" : "No"}</li>
+            <li key="care_level">Care level: {plantObj!.care_level}</li>
+          </ul>
         </div>
-        <div className='detail-description'>
-          {plantObj!.description}
-        </div>
-        <ul className='detail-stats'>
-          <li key="type"      >Type: {plantObj!.type}</li>
-          <li key="cycle"     >Cycle: {plantObj!.cycle}</li>
-          <li key="watering"  >Watering: {plantObj!.watering}</li>
-          <li key="flowers"   >Flowers: {plantObj!.flowers ? "Yes" : "No"}</li>
-          <li key="fruits"    >Fruits: {plantObj!.fruits ? "Yes" : "No"}</li>
-          <li key="invasive"  >Invasive: {plantObj!.invasive ? "Yes" : "No"}</li>
-          <li key="indoor"    >Indoor: {plantObj!.indoor ? "Yes" : "No"}</li>
-          <li key="care_level">Care level: {plantObj!.care_level ? "Yes" : "No"}</li>
-        </ul>
       </div>
+      <button className='add-plant-btn' onClick={() => addPlantToUser()}>
+        Add Plant
+      </button>
     </div>
   );
 }
 export default PlantDetail
 
-function GetPrevDetail(plantId) {
-  if (plantId === 1) {
-    return 1;
-  }
-  return plantId - 1;
-}
-function GetNextDetail(plantId) {
- // temp 
-  if (plantId === 30) {
-    return 30;
-  }
-  return plantId + 1;
-}
+// function GetPrevDetail(plantId) {
+//   if (plantId === 1) {
+//     return 1;
+//   }
+//   return plantId - 1;
+// }
+// function GetNextDetail(plantId) {
+//  // temp 
+//   if (plantId === 30) {
+//     return 30;
+//   }
+//   return plantId + 1;
+// }
 
-function AddPlantToUser(props :{userId:any, plantId:any}) {
-  const userId = props.userId;
-  const plantId = props.plantId;
-  const [ plantObj, setPlantObj ] = useState<PlantObject>();
-  const [userObj, setUserObj] = useState<UserObject>();
-  const [isLoading, setLoading] = useState(true);
-  const [isFailed, setFailed] = useState(false);
+// function AddPlantToUser(props :{userId:any, plantId:any}) {
+//   const userId = props.userId;
+//   const plantId = props.plantId;
+//   const [ plantObj, setPlantObj ] = useState<PlantObject>();
+//   const [userObj, setUserObj] = useState<UserObject>();
+//   const [isLoading, setLoading] = useState(true);
+//   const [isFailed, setFailed] = useState(false);
 
-  // convert to axios api get and put requests
-  let plantQuery = page1.find(plant => plant.id === Number(plantId));
-  if (plantQuery) {
-      setPlantObj({
-          id: plantQuery.id,
-          common_name: plantQuery.common_name,
-          scientific_name: plantQuery.scientific_name[0],
-          cycle: plantQuery.cycle,
-          watering: plantQuery.watering,
-          default_image: plantQuery.default_image ? plantQuery.default_image.original_url : no_img,
-      });
-  } else {
-      setFailed(true);
-  }
-  let userQuery = updated_users.find(user => user.id === String(userId));
-  if (userQuery) {
-      setUserObj({
-        id: userQuery.id,
-        name: userQuery.name,
-        email: userQuery.email,
-        picture_path: userQuery.picture_path ? userQuery.picture_path : no_img,
-        plants: userQuery.plants,
-        reminders: ReminderJSON_to_Obj(userQuery.reminders)
-      })
-  }
-  if (userObj && plantObj) {
-      const updatedUserObj: UserObject = {
-          ...userObj,
-          plants: [...userObj.plants, plantObj.id]
-      };
+//   // convert to axios api get and put requests
+//   let plantQuery = page1.find(plant => plant.id === Number(plantId));
+//   if (plantQuery) {
+//       setPlantObj({
+//           id: plantQuery.id,
+//           common_name: plantQuery.common_name,
+//           scientific_name: plantQuery.scientific_name[0],
+//           cycle: plantQuery.cycle,
+//           watering: plantQuery.watering,
+//           default_image: plantQuery.default_image ? plantQuery.default_image.original_url : no_img,
+//       });
+//   } else {
+//       setFailed(true);
+//   }
+//   let userQuery = updated_users.find(user => user.id === String(userId));
+//   if (userQuery) {
+//       setUserObj({
+//         id: userQuery.id,
+//         name: userQuery.name,
+//         email: userQuery.email,
+//         picture_path: userQuery.picture_path ? userQuery.picture_path : no_img,
+//         plants: userQuery.plants,
+//         reminders: ReminderJSON_to_Obj(userQuery.reminders)
+//       })
+//   }
+//   if (userObj && plantObj) {
+//       const updatedUserObj: UserObject = {
+//           ...userObj,
+//           plants: [...userObj.plants, plantObj.id]
+//       };
 
-      // Update the state with the new user object
-      setUserObj(updatedUserObj);
+//       // Update the state with the new user object
+//       setUserObj(updatedUserObj);
 
-      // Save the updated user object to test_users.json (you'll need a function for this)
-      // saveUpdatedUserObjToJSON(updatedUserObj);
-  }
-}
+//       // Save the updated user object to test_users.json (you'll need a function for this)
+//       // saveUpdatedUserObjToJSON(updatedUserObj);
+//   }
+// }
 // function writeToJSON() {
 //     const fs = require("fs");
 

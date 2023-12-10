@@ -171,7 +171,12 @@ module.exports = function (router) {
                 res.status(404).json({message: "Person not found", data: ""});
                 return;
             }
-            user.plants.push(Number(req.params.plantid));
+            const plantid = Number(req.params.plantid);
+            if (user.plants.includes(plantid)) {
+                res.status(400).json({message: "User already has that plant", data: ""})
+                return;
+            }
+            user.plants.push(plantid);
             user.save();
             res.json({message: "Plant added to user's list", data: user});
         } catch (err) {
