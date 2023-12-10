@@ -30,7 +30,7 @@ function GetUserData2(props: { data: JSON; user: User }) {
         );
         setLoading(false);
         if (userQuery) {
-          // console.log(userQuery);
+// console.log(userQuery);
           setUserObj({
             id: userQuery.id,
             name: userQuery.name,
@@ -75,6 +75,7 @@ function GetUserData2(props: { data: JSON; user: User }) {
   );
 }
 export default function Dashboard(props: { user: User | undefined | null }) {
+  console.log('in dashboard');
   return (
     // <div className='Dashboard'>
     //     <div className='Dashboard-top-half'>
@@ -138,6 +139,7 @@ function MyPlants(props: { user: UserObject }) {
     "Flowers",
   ];
   const data = page1;
+  console.log(JSON.stringify(user));
   // replace with api call. Fetches all plants from user's plant list of plantIds
   useEffect(() => {
     const fetchPlantData = async () => {
@@ -178,9 +180,9 @@ function MyPlants(props: { user: UserObject }) {
       setFilterNum(idx);
     }
   }
-  if (isFailed) {
-    return <div>Failed to load plants</div>;
-  }
+  // if (isFailed) {
+  //   return <div>Failed to load plants</div>;
+  // }
   if (isLoading) {
     return <div>Loading your plants...</div>;
   } else {
