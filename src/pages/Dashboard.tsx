@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import no_img from "../images/no_img.jpg";
 import PlantObject from "../types/PlantObject.tsx";
 import UserObject from "../types/UserObject.tsx";
 import ReminderObject from "../types/ReminderObject.tsx";
@@ -57,7 +56,7 @@ function GetUserData2(props: { data: JSON; user: User }) {
             id: userData.id,
             name: userData.name,
             email: userData.email,
-            picture_path: userData.picture_path ? userData.picture_path : no_img,
+            picture_path: userData.picture_path ? userData.picture_path : '/default_pfp.svg',
             plants: userData.plants,
             // reminders: userData.reminders,
             reminders: [] // temporary 
@@ -73,7 +72,11 @@ function GetUserData2(props: { data: JSON; user: User }) {
   }, [props.data, userId]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+    <div className="Dashboard">
+      <h1>Loading...</h1>
+    </div>
+    );
   }
 
   return (
@@ -120,8 +123,12 @@ function MyProfile(props: { user: User, userObject:UserObject}) {
       <div className="profile-pic">
         <img
           className="profile-pic"
+<<<<<<< HEAD
           // src={user.photoURL ? user.photoURL : no_img}
           src={userObj.picture_path ? userObj.picture_path : no_img}
+=======
+          src={user.picture_path ? user.picture_path : '/default_pfp.svg'}
+>>>>>>> 4f2904f (Safety commit)
           alt={"Profile"}
           referrerPolicy="no-referrer"
         />
@@ -129,7 +136,11 @@ function MyProfile(props: { user: User, userObject:UserObject}) {
       <div className="profile-info">
         <span className="profile-header">My Profile </span>
         <ul className="profile-info-data">
+<<<<<<< HEAD
           <li>{userObj.name}</li>
+=======
+          <li>{user.name}</li>
+>>>>>>> 4f2904f (Safety commit)
           <li>{user.email}</li>
         </ul>
       </div>
@@ -152,7 +163,6 @@ function MyPlants(props: { user: UserObject}) {
     "Annuals",
     "Perennials",
     "Biennials",
-    "Vegetables",
     "Trees",
     "Flowers",
   ];
@@ -173,7 +183,7 @@ function MyPlants(props: { user: UserObject}) {
             scientific_name: plantData.scientific_name[0],
             cycle: plantData.cycle,
             watering: plantData.watering,
-            default_image: plantData.default_image ? plantData.default_image.regular_url : no_img,            
+            default_image: plantData.default_image ? (plantData.default_image.regular_url ? plantData.default_image.regular_url : '/no_img_square.jpg') : '/no_img_square.jpg',            
           });
         });
         setPlantObjects(fetchedPlantObjArr);
@@ -195,7 +205,10 @@ function MyPlants(props: { user: UserObject}) {
     }
   }
   if (isLoading) {
-    return <div>Loading your plants...</div>;
+    return (
+    <div className="MyPlants-container">
+      <h2>Loading your plants...</h2>
+    </div>);
   } else {
     return (
       <div className="MyPlants-container">
@@ -323,23 +336,16 @@ function ViewToggle({ viewMode, setViewMode }) {
 }
 
 function plantFilter(idx, plant) {
-  // console.log(`Checking ${plant} against filter ${idx}`);
-  // console.log(plant);
   switch (idx) {
     case 1:
       return plant.cycle === "Annual";
-      break;
     case 2:
       return plant.cycle === "Perennial";
-      break;
     case 3:
       return plant.cycle === "Biennial";
-      break;
     case 4:
-      return plant.type === "vegetable";
-    case 5:
       return plant.type === "trees";
-    case 6:
+    case 5:
       return plant.flowers;
     default:
       return true; // 0
@@ -421,6 +427,7 @@ function AddPlants({userObject, setUserObject}) {
         ...userObject,
         plants: [...userObject.plants, plant.id]
       });
+      console.log(userObject);
     } catch (error) {
       console.log(error);
     }
@@ -435,21 +442,21 @@ function AddPlants({userObject, setUserObject}) {
         const plantResponse = await axios.get(query);
         const plantDataArr = plantResponse.data.data;
         // console.log(plantDataArr);
-        plantDataArr.forEach(plantData => {
+        await plantDataArr.forEach(plantData => {
           fetchedPlantObjArr.push({
             id: plantData.id,
             common_name: plantData.common_name,
             scientific_name: plantData.scientific_name[0],
             cycle: plantData.cycle,
             watering: plantData.watering,
-            default_image: plantData.default_image ? plantData.default_image.regular_url : no_img,            
+            default_image: plantData.default_image ? plantData.default_image.regular_url : '/no_img_square.jpg',            
           });
         });
-        setPlantObjects(fetchedPlantObjArr);
+        await setPlantObjects(fetchedPlantObjArr);
         const fuse = new Fuse(plantObjs, {
             keys: ['common_name']
         })
-        setPlantFuse(fuse);
+        await setPlantFuse(fuse);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching plant data:", error);
@@ -457,11 +464,18 @@ function AddPlants({userObject, setUserObject}) {
       }
     };
     fetchPlantData();
-  }, [plantObjs]);
+  });
+
+  function isAdded(p) {
+    console.log(p.item.id);
+    return userObject.plants.find(o => Number(o.id) === Number(p.item.id)) !== undefined
+  }
   
   if (isLoading) {
       return (
-          <div>Loading</div>
+        <div className="AddPlants-container">
+          <h2>Loading add plant menu...</h2>
+        </div>
       );
   } else {
       return (
@@ -483,7 +497,14 @@ function AddPlants({userObject, setUserObject}) {
                                           className='AddPlants-search-result' 
                                           onClick={() => AddPlantToUser(p.item)}
                                       >
-                                          <label>{p.item.common_name}</label>
+                                        <img
+                                          className='add-img'
+                                          src={isAdded(p) ? 
+                                            '/add_plus.svg'
+                                            :
+                                            '/add_check.svg'
+                                          }/>
+                                        <label>{p.item.common_name}</label>
                                       </button>
                                   </li>
                               );
@@ -495,7 +516,7 @@ function AddPlants({userObject, setUserObject}) {
                 </div>
                 <div className='AddPlants-by-gallery'>
                     <Link to='gallery' className='AddPlants-link'>
-                        <p>Add a plant from the gallery page.</p>
+                        <p>Or, add a plant from the gallery page.</p>
                     </Link>
                 </div>
           </div>

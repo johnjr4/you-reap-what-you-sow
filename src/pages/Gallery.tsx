@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import no_img from '../images/no_img_square.jpg';
 import './Gallery.scss';
 import PlantObject from '../types/PlantObject';
 import Fuse from 'fuse.js';
@@ -108,7 +107,7 @@ function ListItem(props: {plant : PlantObject, userId : string}) {
                     <h3 className='plant-name'>{`#${plant.id}: ${plant.common_name}`}</h3>
                     <p className='plant-species'><i>{plant.scientific_name}</i></p>
                 </div>
-                <img src={plant.default_image ? plant.default_image.original_url : no_img} alt={plant.common_name}/>
+                <img src={plant.default_image ? plant.default_image.original_url : '/no_img_square.jpg'} alt={plant.common_name}/>
             </div>
         </Link>
     )

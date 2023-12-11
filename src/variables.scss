@@ -16,8 +16,17 @@ $text-dark: rgb(43, 23, 1);
 $text-emphasis: rgb(41, 148, 17);
 
 // Dashboard
-$container-color: $logo-light;
+$container-color: $manilla;
 $black-border: 3px solid black;
-$large-border-radius: 0cap;
-$item-color: rgb(221, 221, 217);
-$small-border-radius: 1cap;
+$large-border-radius: 10px;
+$item-color: $paper;
+$small-border-radius: 5px;
+
+// Mixins
+@mixin darken-hover {
+    cursor: pointer;
+    transition: filter 0.1s ease;
+    &:hover {
+        filter: brightness(70%);
+    }
+}

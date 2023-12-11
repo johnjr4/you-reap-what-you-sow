@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import page1 from '../dev/compiled_responses1.json';
 import test_users from '../dev/test_users.json';
-import no_img from '../images/no_img.jpg';
 import PlantObject from '../types/PlantObject';
 import UserObject from '../types/UserObject.tsx';
 import GetTestPlantData3 from '../dev/parse_plant_json.tsx';
@@ -17,7 +16,7 @@ const defaultPlant = {
   scientific_name: "You screwed up",
   cycle: "nope",
   watering: "nuh-uh",
-  default_image: no_img
+  default_image: '/no_img.jpg'
 }
 
 function PlantDetail() {
@@ -87,7 +86,7 @@ function PlantDetail() {
           src={plantObj!.default_image ?
             plantObj!.default_image.original_url
             :
-            no_img
+            '/no_img.jpg'
           }
           alt={plantObj!.common_name}
           />
