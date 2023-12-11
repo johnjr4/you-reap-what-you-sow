@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import no_img from '../images/no_img.jpg';
+import no_img from '../images/no_img_square.jpg';
 import './Gallery.scss';
 import PlantObject from '../types/PlantObject';
 import Fuse from 'fuse.js';

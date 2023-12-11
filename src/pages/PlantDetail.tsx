@@ -20,14 +20,11 @@ const defaultPlant = {
   default_image: no_img
 }
 
-// fucntion addPlantToUser() {
-
-// }
-
 function PlantDetail() {
   const { userId, plantId } = useParams();
   console.log(`user ${userId} plant ${plantId}`)
   const [ plantObj, setPlantObj ] = useState<PlantDetailObject>();
+  const [added, setAdded] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [isFailed, setFailed] = useState(false);
 
@@ -36,9 +33,16 @@ function PlantDetail() {
       try {
         const fetchPlantData = async () => {
             let plantData = await axios.get(`http://localhost:4001/api/plants/${plantId}`);
-            if (plantData) {
+            let userData = await axios.get(`http://localhost:4001/api/users/${userId}`);
+            if (plantData && userData) {
               console.log(plantData);
               setPlantObj(plantData.data.data);
+              console.log(userData.data.data.plants);
+              console.log(`Does it include ${plantId}?`);
+              if (userData.data.data.plants.includes(Number(plantId))) {
+                console.log("setting added");
+                setAdded(true);
+              }
             } else {
               setFailed(true);
             }
@@ -53,7 +57,17 @@ function PlantDetail() {
   async function addPlantToUser() {
     try {
       await axios.post(`http://localhost:4001/api/users/${userId}/${plantId}`);
+      setAdded(true);
     } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function removePlantFromUser() {
+    try {
+      await axios.delete(`http://localhost:4001/api/users/${userId}/${plantId}`);
+      setAdded(false);
+    } catch(err) {
       console.log(err);
     }
   }
@@ -99,114 +113,20 @@ function PlantDetail() {
           </ul>
         </div>
       </div>
-      <button className='add-plant-btn' onClick={() => addPlantToUser()}>
-        Add Plant
+      <button
+        className={`add-plant-btn ${added? 'yeah' : 'no'}`}
+        onClick={!added ? () => addPlantToUser() : () => removePlantFromUser()}
+      >
+        <img
+          className="add-plant-img"
+          src={added ? '/add_check.svg' : '/add_plus.svg'}
+        />
+        <img
+          className="rem-plant-img"
+          src={added ? '/delete_x.svg' : '/add_plus.svg'}
+        />
       </button>
     </div>
   );
 }
 export default PlantDetail
-
-// function GetPrevDetail(plantId) {
-//   if (plantId === 1) {
-//     return 1;
-//   }
-//   return plantId - 1;
-// }
-// function GetNextDetail(plantId) {
-//  // temp 
-//   if (plantId === 30) {
-//     return 30;
-//   }
-//   return plantId + 1;
-// }
-
-// function AddPlantToUser(props :{userId:any, plantId:any}) {
-//   const userId = props.userId;
-//   const plantId = props.plantId;
-//   const [ plantObj, setPlantObj ] = useState<PlantObject>();
-//   const [userObj, setUserObj] = useState<UserObject>();
-//   const [isLoading, setLoading] = useState(true);
-//   const [isFailed, setFailed] = useState(false);
-
-//   // convert to axios api get and put requests
-//   let plantQuery = page1.find(plant => plant.id === Number(plantId));
-//   if (plantQuery) {
-//       setPlantObj({
-//           id: plantQuery.id,
-//           common_name: plantQuery.common_name,
-//           scientific_name: plantQuery.scientific_name[0],
-//           cycle: plantQuery.cycle,
-//           watering: plantQuery.watering,
-//           default_image: plantQuery.default_image ? plantQuery.default_image.original_url : no_img,
-//       });
-//   } else {
-//       setFailed(true);
-//   }
-//   let userQuery = updated_users.find(user => user.id === String(userId));
-//   if (userQuery) {
-//       setUserObj({
-//         id: userQuery.id,
-//         name: userQuery.name,
-//         email: userQuery.email,
-//         picture_path: userQuery.picture_path ? userQuery.picture_path : no_img,
-//         plants: userQuery.plants,
-//         reminders: ReminderJSON_to_Obj(userQuery.reminders)
-//       })
-//   }
-//   if (userObj && plantObj) {
-//       const updatedUserObj: UserObject = {
-//           ...userObj,
-//           plants: [...userObj.plants, plantObj.id]
-//       };
-
-//       // Update the state with the new user object
-//       setUserObj(updatedUserObj);
-
-//       // Save the updated user object to test_users.json (you'll need a function for this)
-//       // saveUpdatedUserObjToJSON(updatedUserObj);
-//   }
-// }
-// function writeToJSON() {
-//     const fs = require("fs");
-
-//     // the .json file path
-//     const JSON_FILE = "user.json";
-
-//     try {
-//     // reading the JSON file
-//     const jsonData = fs.readFileSync(JSON_FILE);
-
-//     // parsing the JSON content
-//     const user = JSON.parse(jsonData);
-
-//     // adding the "completeName" field to
-//     // JavaScript representation of the
-//     // "user.json" file
-//     data["completeName"] = `${user.firstName} ${user.lastName}`;
-
-//     // updating the JSON file
-//     fs.writeFileSync(JSON_FILE, data);
-//     } catch (error) {
-//     // logging the error
-//     console.error(error);
-
-//     throw error;
-//     }
-// }
-
-// function saveUpdatedUserObjToJSON(props: {updatedUserObj: UserObject}) {
-//     const updatedUserObj = props.updatedUserObj;
-//     // Find the index of the user object in the test_users array
-//     const index = test_users.findIndex(user => user.id === updatedUserObj.id);
-
-//     if (index !== -1) {
-//         // Update the test_users array with the modified user object
-//         const updatedTestUsers = [...test_users];
-//         updatedTestUsers[index] = updatedUserObj;
-
-//         // Save the updated array to your JSON file (you'll need a function for this)
-//         saveArrayToJSON(updatedTestUsers);
-//     }
-// }
-
