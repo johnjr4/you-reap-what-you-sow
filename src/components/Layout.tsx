@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../firebase";
 import "./Layout.scss";
 import { User } from "firebase/auth";
+import axios from "axios";
+import UserObject from "../types/UserObject";
 
 function Layout(props: { user: User | undefined | null }) {
   // const [user, loading] = useAuthState(auth);
+  const [ourUser, setOurUser] = useState<UserObject>();
+  const [loading, setLoading] = useState<boolean>(true);
   const user = props.user;
   const email = user?.email;
-  const name = user?.displayName;
+  // const name = user?.displayName;
   const photo = String(user?.photoURL ? user.photoURL : "/default_pfp.svg");
 
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +24,35 @@ function Layout(props: { user: User | undefined | null }) {
   //   if (loading) return;
   //   if (!user) return navigate("/login");
   // }, [user, loading]);
+
+  useEffect(() => {
+    async function fetchOurUser() {
+      if (user) {
+        let userRes = await axios.get(`http://localhost:4001/api/users/${user!.uid}`);
+        await setOurUser(userRes.data.data);
+        setLoading(false);
+      }
+    }
+
+    try {
+      fetchOurUser();
+    } catch(err) {
+      console.log(err);
+    }
+  }, [user])
+
+  if (loading || !ourUser) {
+    console.log("Returning loading");
+    return (
+    <div id="layout">
+      <nav id="navbar"/>
+      <Outlet/>
+    </div>
+    )
+  }
+
+  console.log(ourUser);
+
   return (
     <div id="layout">
       <nav id="navbar">
@@ -37,10 +70,10 @@ function Layout(props: { user: User | undefined | null }) {
           onClick={() => setShowModal(!showModal)}
           className="user-details navbar-group"
         >
-          <p className="navbar-name">{name}</p>
+          <p className="navbar-name">{ourUser.name}</p>
           <img
             className="navbar-pfp pfp"
-            src={photo}
+            src={ourUser.picture_path ? ourUser.picture_path : photo}
             alt="profile picture"
             referrerPolicy="no-referrer"
           />
@@ -51,13 +84,13 @@ function Layout(props: { user: User | undefined | null }) {
           <div className="modal-group user-overview">
             <div className="modal-user-details">
               <p>
-                <b>{name}</b>
+                <b>{ourUser.name}</b>
               </p>
-              <p>{email}</p>
+              <p>{ourUser.email}</p>
             </div>
             <img
               className="modal-pfp pfp"
-              src={photo}
+              src={ourUser.picture_path ? ourUser.picture_path : photo}
               alt="profile picture"
               referrerPolicy="no-referrer"
             />

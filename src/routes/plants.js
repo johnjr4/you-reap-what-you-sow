@@ -171,7 +171,12 @@ module.exports = function (router) {
                 res.status(404).json({message: "Person not found", data: ""});
                 return;
             }
-            user.plants.push(Number(req.params.plantid));
+            const plantid = Number(req.params.plantid);
+            if (user.plants.includes(plantid)) {
+                res.status(400).json({message: "User already has that plant", data: ""})
+                return;
+            }
+            user.plants.push(plantid);
             user.save();
             res.json({message: "Plant added to user's list", data: user});
         } catch (err) {
@@ -240,6 +245,29 @@ module.exports = function (router) {
             res.json({message: "Deleted User", data: ""});
         } catch (error){
             res.status(500).json({message: error.message, data: ""})
+        }
+    })
+
+    // Delete plant from users list
+    router.delete('/users/:id/:plantid', async (req, res) => {
+        try {
+            const user = await User.findOne({id: req.params.id});
+            if (!user) {
+                res.status(404).json({message: "Person not found", data: ""});
+                return;
+            }
+            const plantid = Number(req.params.plantid);
+            if (!user.plants.includes(plantid)) {
+                res.status(400).json({message: "User does not have that plant", data: ""})
+                return;
+            }
+            user.plants = user.plants.filter(function(plant) {
+                return plant !== Number(req.params.plantid);
+            })
+            user.save();
+            res.json({message: "Plant removed from user's list", data: user});
+        } catch (error) {
+            res.status(500).json({message: "Internal server error", data: ""});
         }
     })
 

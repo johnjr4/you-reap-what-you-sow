@@ -1,90 +1,53 @@
 import React, {useEffect, useState} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import no_img from '../images/no_img.jpg';
+import no_img from '../images/no_img_square.jpg';
 import './Gallery.scss';
-import page1 from '../dev/page1.json'
 import PlantObject from '../types/PlantObject';
-// const Fuse = require('fuse.js');
 import Fuse from 'fuse.js';
-
-const apiKey = "sk-FDOp656a72748c8563227"; // PUT YOUR KEY HERE
+import PlantDetailObject from '../types/PlantDetailObject';
 
 function plantFilter(idx, plant) {
-    // console.log(`Checking ${plant} against filter ${idx}`);
-    // console.log(plant);
     switch (idx) {
         case 1:
+            console.log("filtering annuals");
             return plant.cycle === "Annual"
         case 2:
+            console.log("filtering perennials");
+            console.log(plant);
             return plant.cycle === "Perennial"
         case 3:
+            console.log("filtering biennials");
             return plant.cycle === "Biennial"
         case 4:
-            return plant.type === "vegetable";
+            console.log("filtering trees");
+            return plant.type === "tree";
         case 5:
-            return plant.type === "trees";
-        case 6:
+            console.log("filtering flowers");
             return plant.flowers;
         default:
             return true; // 0
     }
 }
 
-function plantSearch(plant, query) {
-    return true;
-}
-
 function Gallery() {
     const [isLoading, setLoading] = useState(true);
-    const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
-    const [plantFuse, setPlantFuse] = useState<Fuse>();
+    const [plantObjs, setPlantObjects] = useState<PlantDetailObject[]>([])
     const [filterNum, setFilterNum] = useState(0);
     const [query, setQuery] = useState("");
     const { userId } = useParams();
 
-    const filters = ['Annuals', 'Perennials', 'Biennials', 'Vegetables', 'Trees', 'Flowers']
+    const filters = ['Annuals', 'Perennials', 'Biennials', 'Trees', 'Flowers']
     useEffect(() => {
-        // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`) 
-        // .then( async response => {
-            // // console.log(response);
-            // const plantResponse = response.data.data.map((plant: any)=> {
-                //     // console.log('heere! 25')
-                //     return {
-                    //     id: plant.id,
-                    //     common_name: plant.common_name,
-                    //     scientific_name: plant.scientific_name[0],
-                    //     default_image: plant.default_image ? plant.default_image.original_url : no_img,
-                    
-                    //     }
-                    // });
-                    // //console.log(plantResponse)
-        // setPlantObjects(plantResponse);
-        // setLoading(false);
-        // })
-        // .catch(() => {
-        //     console.log('you messed up')
-        // });
-
-        // Uncomment above and delte below! Local JSON is just for developing UI without burning through API calls
-        const plantResponse = page1.map((plant: any) => {
-            return {
-                id: plant.id,
-                common_name: plant.common_name,
-                scientific_name: plant.scientific_name[0],
-                default_image: plant.default_image ? plant.default_image.original_url : no_img,
-                cycle: plant.cycle,
-                watering: plant.watering
-            }
-        });
-        setPlantObjects(plantResponse);
-        const fuse = new Fuse(plantResponse, {
-            keys: ['common_name']
+        axios.get(`http://localhost:4001/api/plants?where={"common_name":{"$regex":"${query}","$options":"i"}}&sort={"id":1}&limit=100`) 
+        .then( async response => {
+            setPlantObjects(response.data.data);
+            setLoading(false);
         })
-        setPlantFuse(fuse);
-        setLoading(false);
-        // End dev test code
-    }, []);
+        .catch(() => {
+            console.log('you messed up')
+        });
+    }, [query]);
 
     function selectFilter(idx) {
         if (filterNum === idx) {
@@ -96,9 +59,9 @@ function Gallery() {
 
     if (isLoading) {
         return (
-            <div>
-                Gallery layout
-            </div>
+            <h1>
+                Loading...
+            </h1>
         );
     } else {
         return (
@@ -122,16 +85,7 @@ function Gallery() {
                     })}
                 </div>
                 <ul className='masonry'>
-                    {query !== "" ?
-                    plantFuse.search(query).map((p: any) => {
-                        if (plantFilter(filterNum, p)) {
-                            return <li key={p.id}><ListItem plant={p.item} userId={userId}/></li>
-                        } else {
-                            return null;
-                        }
-                    })
-                    :
-                    plantObjs.map((p:PlantObject) => {
+                    {plantObjs.map((p:PlantObject) => {
                         if (plantFilter(filterNum, p)) {
                             return <li key={p.id}><ListItem plant={p} userId={userId}/></li>
                         } else {
@@ -147,7 +101,6 @@ function Gallery() {
 function ListItem(props: {plant : PlantObject, userId : string}) {
     const plant = props.plant;
     const userId = props.userId;
-    console.log(plant);
     return (
         <Link to={`/user/${userId}/detail/${plant.id}`}>
             <div className='plant-card'>
@@ -155,7 +108,7 @@ function ListItem(props: {plant : PlantObject, userId : string}) {
                     <h3 className='plant-name'>{`#${plant.id}: ${plant.common_name}`}</h3>
                     <p className='plant-species'><i>{plant.scientific_name}</i></p>
                 </div>
-                <img src={plant.default_image} alt={plant.common_name}/>
+                <img src={plant.default_image ? plant.default_image.original_url : no_img} alt={plant.common_name}/>
             </div>
         </Link>
     )

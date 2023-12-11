@@ -1,14 +1,23 @@
 @import '../variables.scss';
 
-.plant-detail {
-    width: 70%;
+$btn-size: 5em;
+
+.plant-detail-wrapper {
+    width: 100%;
     min-width: 800px;
     min-height: 80vh;
     padding-top: max(2vh, 40px);
+    display: flex;
+    justify-content: center;
     margin-left: auto;
     margin-right: auto;
+    transform: translateX($btn-size / 2);
+}
+
+.plant-detail {
     display: flex;
     overflow: hidden;
+    width: 70%;
 }
 
 $radius: 10px;
@@ -49,4 +58,38 @@ $radius: 10px;
     font-size: 0.9em;
     column-count: 2;
     text-align: left;
+}
+
+.add-plant-btn {
+    height: 5em;
+    width: 5em;
+    background-color: $manilla;
+    border-radius: $radius;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.add-plant-img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    opacity: 1;
+}
+
+.rem-plant-img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    opacity: 0;
+}
+
+.add-plant-btn:hover .add-plant-img {
+    opacity: 0;
+}
+
+.add-plant-btn:hover .rem-plant-img {
+    opacity: 1;
 }
