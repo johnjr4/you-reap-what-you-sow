@@ -12,12 +12,6 @@ function Register() {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
-  // const register = () => {
-  //   console.log('in register function');
-  //   if (!name) alert("Please enter name");
-  //   addToDB();
-  //   emailRegister(name, email, password);
-  // };
   const register = async () => {
     console.log('in register function');
     if (!name) {
@@ -47,19 +41,17 @@ function Register() {
     console.log(`trying to add user ${user} ${user?.uid}: ${name}, ${email} to users database`);
     try {
       const {data} = await axios.post('http://localhost:4001/api/users', {
-        id: user?.uid,
         name: name,
         email: email,
       });
       console.log(JSON.stringify(data));
     } catch (error) {
-      console.log(`ERROR HELLO CAN YOU SEE THIS \n${error}\n${error.message}`);
+      console.log(`Error in synchronizing Firebase with Mongo \n${error}\n${error.message}`);
     }
   };
 
   return (
     <div className="login">
-      <div>HELLO THEREasdfasdf</div>
       <div className="container">
         <div>Register</div>
         <br></br>
