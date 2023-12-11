@@ -31,17 +31,22 @@ function GetUserData2(props: { data: JSON; user: User }) {
           // PUT this user into the mongoDB since the post request in the register page can only add name and email. this adds the firebase ID to the data
           // If the user has already logged in once before, this will error and be caught.
           try {
-            const assign_FB_id_to_mongoDB = await axios.put(`http://localhost:4001/api/users/${userId}`, {
+            const assign_FB_id_to_mongoDB = await axios.put(`http://localhost:4001/api/users/123`, {
               name: usernameFB,
               email: emailFB,
               id: userId
+            },
+            {
+              headers: {
+                'purpose': 'Initial put'
+              }
             });
             // console.log(assign_FB_id_to_mongoDB);
           } catch(error) {
             console.log(`Error in put in dashboard: ${error.message}`);
           }
         }
-        // actually GET data from axios 
+        // actually GET data from axios
         console.log('attempting fetch from mongo users endpt');
         const userResponse = await axios.get(`http://localhost:4001/api/users/${userId}`);
         if (userResponse) {
@@ -74,7 +79,7 @@ function GetUserData2(props: { data: JSON; user: User }) {
   return (
     <div className="Dashboard">
       <div className="Dashboard-top-half">
-        <MyProfile user={props.user} />
+        <MyProfile user={props.user} userObject={userObj ? userObj : ({} as UserObject)} />
         <Reminders user={userObj ? userObj : ({} as UserObject)} />
       </div>
       <div className="Dashboard-bottom-half">
@@ -107,14 +112,16 @@ export default function Dashboard(props: { user: User | undefined | null }) {
   );
 }
 
-function MyProfile(props: { user: User}) {
+function MyProfile(props: { user: User, userObject:UserObject}) {
   const user = props.user;
+  const userObj = props.userObject;
   return (
     <div className="MyProfile-container">
       <div className="profile-pic">
         <img
           className="profile-pic"
-          src={user.photoURL ? user.photoURL : no_img}
+          // src={user.photoURL ? user.photoURL : no_img}
+          src={userObj.picture_path ? userObj.picture_path : no_img}
           alt={"Profile"}
           referrerPolicy="no-referrer"
         />
@@ -122,7 +129,7 @@ function MyProfile(props: { user: User}) {
       <div className="profile-info">
         <span className="profile-header">My Profile </span>
         <ul className="profile-info-data">
-          <li>{user.displayName}</li>
+          <li>{userObj.name}</li>
           <li>{user.email}</li>
         </ul>
       </div>
@@ -405,7 +412,11 @@ function AddPlants({userObject, setUserObject}) {
   const AddPlantToUser = async (plant) => {
     try {
       console.log(`attempting to post to http://localhost:4001/api/users/${userId}/${plant.id}`);
-      const updateUsersResponse = await axios.post(`http://localhost:4001/api/users/${userId}/${plant.id}`);
+      const updateUsersResponse = await axios.post(`http://localhost:4001/api/users/${userId}/${plant.id}`, {
+        headers: {
+          'purpose': ''
+        }
+      });
       setUserObject({
         ...userObject,
         plants: [...userObject.plants, plant.id]
