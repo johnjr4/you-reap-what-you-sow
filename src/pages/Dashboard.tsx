@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import no_img from "../images/no_img.jpg";
 import PlantObject from "../types/PlantObject.tsx";
 import UserObject from "../types/UserObject.tsx";
 import ReminderObject from "../types/ReminderObject.tsx";
-import page1 from "../dev/page1.json";
-import test_users from "../dev/test_users.json";
 import updated_users from "../dev/updated_users.json";
-import GetTestPlantData3 from "../dev/GetTestPlantData3.tsx";
-import GetTestReminderData3 from "../dev/GetTestReminderData3.tsx";
-import ReminderJSON_to_Obj from "../dev/ReminderJSON _to_Obj.tsx";
-import PlantIdArr_to_PlantObjArr from "../dev/PlantIdArr_to_PlantObjArr.tsx";
 import { auth, db, logout } from "../firebase";
 import { User } from "firebase/auth";
 import Fuse from "fuse.js";
+import { query, collection, getDocs, where } from "firebase/firestore";
+
 
 function GetUserData2(props: { data: JSON; user: User }) {
   const [isLoading, setLoading] = useState(true);
@@ -22,28 +18,47 @@ function GetUserData2(props: { data: JSON; user: User }) {
   const { userId } = useParams();
 
   useEffect(() => {
-    // Simulating an asynchronous operation (loading from JSON file)
     const fetchUserData = async () => {
       try {
-        let userQuery = updated_users.find(
-          (user) => user.id === String(userId)
-        );
-        setLoading(false);
-        if (userQuery) {
-// console.log(userQuery);
-          setUserObj({
-            id: userQuery.id,
-            name: userQuery.name,
-            email: userQuery.email,
-            picture_path: userQuery.picture_path
-              ? userQuery.picture_path
-              : no_img,
-            plants: userQuery.plants,
-            reminders: ReminderJSON_to_Obj(userQuery.reminders),
-          });
-        } else {
-          //   setFailed(true);
+        // Get user's name and email from firebase DB using the uid=userId from url
+        const q = query(collection(db, "users"), where("uid", "==", userId));
+        const doc = await getDocs(q);
+        const data = doc.docs[0].data();
+        const usernameFB = data.name;
+        const emailFB = data.email;
+        console.log(`Firebase info for user id ${userId}: ${usernameFB}, ${emailFB}`);
+        if (usernameFB && emailFB) {
+          // PUT this user into the mongoDB since the post request in the register page can only add name and email. this adds the firebase ID to the data
+          // If the user has already logged in once before, this will error and be caught.
+          try {
+            const assign_FB_id_to_mongoDB = await axios.put(`http://localhost:4001/api/users/${userId}`, {
+              name: usernameFB,
+              email: emailFB,
+              id: userId
+            });
+            // console.log(assign_FB_id_to_mongoDB);
+          } catch(error) {
+            console.log(`Error in put in dashboard: ${error.message}`);
+          }
         }
+        // actually GET data from axios 
+        console.log('attempting fetch from mongo users endpt');
+        const userResponse = await axios.get(`http://localhost:4001/api/users/${userId}`);
+        if (userResponse) {
+          setLoading(false);
+          console.log(userResponse.data.data);
+          const userData = userResponse.data.data;
+          setUserObj({
+            id: userData.id,
+            name: userData.name,
+            email: userData.email,
+            picture_path: userData.picture_path ? userData.picture_path : no_img,
+            plants: userData.plants,
+            // reminders: userData.reminders,
+            reminders: [] // temporary 
+          });
+        }
+        console.log('end get user data from db: success!');
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
@@ -52,17 +67,12 @@ function GetUserData2(props: { data: JSON; user: User }) {
     fetchUserData();
   }, [props.data, userId]);
 
-  //   if (isFailed) {
-  //     return <div>Failed to load profile</div>;
-  //   }
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="Dashboard">
-      {/* <p>{`userId: ${userId}`}</p> */}
-      {/* <p>{JSON.stringify(userObj)}</p> */}
       <div className="Dashboard-top-half">
         <MyProfile user={props.user} />
         <Reminders user={userObj ? userObj : ({} as UserObject)} />
@@ -97,7 +107,7 @@ export default function Dashboard(props: { user: User | undefined | null }) {
   );
 }
 
-function MyProfile(props: { user: User }) {
+function MyProfile(props: { user: User}) {
   const user = props.user;
   return (
     <div className="MyProfile-container">
@@ -123,10 +133,11 @@ function MyProfile(props: { user: User }) {
     </div>
   );
 }
-function MyPlants(props: { user: UserObject }) {
+
+function MyPlants(props: { user: UserObject}) {
   const user = props.user;
+
   const [isLoading, setLoading] = useState(true);
-  const [isFailed, setFailed] = useState(false);
   const [plantObjs, setPlantObjects] = useState<PlantObject[]>([]);
   const [filterNum, setFilterNum] = useState(0);
   const [viewMode, setViewMode] = useState("list");
@@ -138,40 +149,36 @@ function MyPlants(props: { user: UserObject }) {
     "Trees",
     "Flowers",
   ];
-  const data = page1;
-  console.log(JSON.stringify(user));
-  // replace with api call. Fetches all plants from user's plant list of plantIds
+
   useEffect(() => {
     const fetchPlantData = async () => {
       try {
         let fetchedPlantObjArr: PlantObject[] = [];
-        for (const plantId of user.plants) {
-          let plantData = data.find((plant) => plant.id === Number(plantId));
-          if (plantData) {
-            fetchedPlantObjArr.push({
-              id: plantData.id,
-              common_name: plantData.common_name,
-              scientific_name: plantData.scientific_name[0],
-              cycle: plantData.cycle,
-              watering: plantData.watering,
-              default_image: plantData.default_image
-                ? plantData.default_image.regular_url
-                : no_img,
-            });
-          } else {
-            setFailed(true);
-          }
-        }
+        const query = `http://localhost:4001/api/plants?where={"id":{"$in":[${user.plants.toString()}]}}&sort={"id":1}`;
+        // console.log(query);
+        const plantResponse = await axios.get(query);
+        const plantDataArr = plantResponse.data.data;
+        // console.log(plantDataArr);
+        plantDataArr.forEach(plantData => {
+          fetchedPlantObjArr.push({
+            id: plantData.id,
+            common_name: plantData.common_name,
+            scientific_name: plantData.scientific_name[0],
+            cycle: plantData.cycle,
+            watering: plantData.watering,
+            default_image: plantData.default_image ? plantData.default_image.regular_url : no_img,            
+          });
+        });
         setPlantObjects(fetchedPlantObjArr);
+        console.log(`HELLO ${user.plants}`);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching plant data:", error);
         setLoading(false);
-        setFailed(true);
       }
     };
     fetchPlantData();
-  }, [user, data]);
+  }, [user]);
 
   function selectFilter(idx) {
     if (filterNum === idx) {
@@ -180,9 +187,6 @@ function MyPlants(props: { user: UserObject }) {
       setFilterNum(idx);
     }
   }
-  // if (isFailed) {
-  //   return <div>Failed to load plants</div>;
-  // }
   if (isLoading) {
     return <div>Loading your plants...</div>;
   } else {
@@ -391,113 +395,99 @@ function RemindersListView(props: { reminders: Array<ReminderObject> }) {
 }
 
 function AddPlants({userObject, setUserObject}) {
-    const [isLoading, setLoading] = useState(true);
-    const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
-    const [plantFuse, setPlantFuse] = useState<Fuse>();
-    const [query, setQuery] = useState("");
-    const { userId } = useParams();
-    // const AddPlantToUserTest2 = (plantId) => {
-    //     console.log(`clicked add plant to user ${userId}`);
-    // };
-    function AddPlantToUserTest(plant) {
-        // locally adds to the plants array, change to add thru api
-        console.log(`clicked add plant ${plant.id} to user ${userId}`);
-        console.log(userObject.plants);
-        const reminderToAdd:ReminderObject = {
-            id: plant.id,
-            plant_name: plant.common_name,
-            date: new Date(),
-            frequency: 1
-        }
-        setUserObject({
-            ...userObject,
-            plants: [...userObject.plants, plant.id]
-        })
-        console.log(userObject.plants);
+
+  const [isLoading, setLoading] = useState(true);
+  const [plantObjs, setPlantObjects] = useState<PlantObject[]>([])
+  const [plantFuse, setPlantFuse] = useState<Fuse>();
+  const [query, setQuery] = useState("");
+  const { userId } = useParams();
+
+  const AddPlantToUser = async (plant) => {
+    try {
+      console.log(`attempting to post to http://localhost:4001/api/users/${userId}/${plant.id}`);
+      const updateUsersResponse = await axios.post(`http://localhost:4001/api/users/${userId}/${plant.id}`);
+      setUserObject({
+        ...userObject,
+        plants: [...userObject.plants, plant.id]
+      });
+    } catch (error) {
+      console.log(error);
     }
-
-    useEffect(() => {
-        // axios.get(`https://perenual.com/api/species-list?key=${apiKey}&page=1`) 
-        // .then( async response => {
-            // // console.log(response);
-            // const plantResponse = response.data.data.map((plant: any)=> {
-                //     // console.log('heere! 25')
-                //     return {
-                    //     id: plant.id,
-                    //     common_name: plant.common_name,
-                    //     scientific_name: plant.scientific_name[0],
-                    //     default_image: plant.default_image ? plant.default_image.original_url : no_img,
-                    
-                    //     }
-                    // });
-                    // //console.log(plantResponse)
-        // setPlantObjects(plantResponse);
-        // setLoading(false);
-        // })
-        // .catch(() => {
-        //     console.log('you messed up')
-        // });
-
-        // Uncomment above and delte below! Local JSON is just for developing UI without burning through API calls
-        const plantResponse = page1.map((plant: any) => {
-            return {
-                id: plant.id,
-                common_name: plant.common_name,
-                scientific_name: plant.scientific_name[0],
-                default_image: plant.default_image ? plant.default_image.original_url : no_img,
-                cycle: plant.cycle,
-                watering: plant.watering
-            }
+  };
+  useEffect(() => {
+    const fetchPlantData = async () => {
+      try {
+        let fetchedPlantObjArr: PlantObject[] = [];
+        // console.log(user.plants.toString());
+        const query = `http://localhost:4001/api/plants`;
+        // console.log(query);
+        const plantResponse = await axios.get(query);
+        const plantDataArr = plantResponse.data.data;
+        // console.log(plantDataArr);
+        plantDataArr.forEach(plantData => {
+          fetchedPlantObjArr.push({
+            id: plantData.id,
+            common_name: plantData.common_name,
+            scientific_name: plantData.scientific_name[0],
+            cycle: plantData.cycle,
+            watering: plantData.watering,
+            default_image: plantData.default_image ? plantData.default_image.regular_url : no_img,            
+          });
         });
-        setPlantObjects(plantResponse);
-        const fuse = new Fuse(plantResponse, {
+        setPlantObjects(fetchedPlantObjArr);
+        const fuse = new Fuse(plantObjs, {
             keys: ['common_name']
         })
         setPlantFuse(fuse);
         setLoading(false);
-        // End dev test code
-    }, []);
-    
-    if (isLoading) {
-        return (
-            <div>Loading</div>
-        );
-    } else {
-        return (
-            <div className='AddPlants-container'>
-                <span className='AddPlants-title'>Add Plants</span>
-                <div className='AddPlants-by-search'>
-                    <input 
-                        type='text'
-                        id='search-bar'
-                        placeholder='Search for a plant to add...'
-                        onChange={(e) => setQuery(e.target.value)}
-                    />
-                    <ul className='AddPlants-search-results-list'>
-                        {query !== "" ? (
-                            plantFuse.search(query).map((p:any) => {
-                                return (
-                                    <li key={p.id}>
-                                        <button 
-                                            className='AddPlants-search-result' 
-                                            onClick={() => AddPlantToUserTest(p.item)}
-                                        >
-                                            <label>{p.item.common_name}</label>
-                                        </button>
-                                    </li>
-                                );
-                            })
-                        ) : (
-                            <div></div>
-                        )}
-                    </ul>
-                  </div>
-                  <div className='AddPlants-by-gallery'>
-                      <Link to='gallery' className='AddPlants-link'>
-                          <p>Add a plant from the gallery page.</p>
-                      </Link>
-                  </div>
-            </div>
-        );
-    }
+      } catch (error) {
+        console.error("Error fetching plant data:", error);
+        setLoading(false);
+      }
+    };
+    fetchPlantData();
+  }, [plantObjs]);
+  
+  if (isLoading) {
+      return (
+          <div>Loading</div>
+      );
+  } else {
+      return (
+          <div className='AddPlants-container'>
+              <span className='AddPlants-title'>Add Plants</span>
+              <div className='AddPlants-by-search'>
+                  <input 
+                      type='text'
+                      id='search-bar'
+                      placeholder='Search for a plant to add...'
+                      onChange={(e) => setQuery(e.target.value)}
+                  />
+                  <ul className='AddPlants-search-results-list'>
+                      {query !== "" ? (
+                          plantFuse.search(query).map((p:any) => {
+                              return (
+                                  <li key={p.id}>
+                                      <button 
+                                          className='AddPlants-search-result' 
+                                          onClick={() => AddPlantToUser(p.item)}
+                                      >
+                                          <label>{p.item.common_name}</label>
+                                      </button>
+                                  </li>
+                              );
+                          })
+                      ) : (
+                          <div></div>
+                      )}
+                  </ul>
+                </div>
+                <div className='AddPlants-by-gallery'>
+                    <Link to='gallery' className='AddPlants-link'>
+                        <p>Add a plant from the gallery page.</p>
+                    </Link>
+                </div>
+          </div>
+      );
+  }
 }
