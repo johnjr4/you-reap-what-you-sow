@@ -45,9 +45,7 @@ function Layout(props: { user: User | undefined | null }) {
     console.log("Returning loading");
     return (
     <div id="layout">
-      <nav id="navbar">
-
-      </nav>
+      <nav id="navbar"/>
       <Outlet/>
     </div>
     )

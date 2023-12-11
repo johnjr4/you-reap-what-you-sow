@@ -20,12 +20,9 @@ function plantFilter(idx, plant) {
             console.log("filtering biennials");
             return plant.cycle === "Biennial"
         case 4:
-            console.log("filtering vegetables");
-            return plant.type === "vegetable";
-        case 5:
             console.log("filtering trees");
             return plant.type === "tree";
-        case 6:
+        case 5:
             console.log("filtering flowers");
             return plant.flowers;
         default:
@@ -40,7 +37,7 @@ function Gallery() {
     const [query, setQuery] = useState("");
     const { userId } = useParams();
 
-    const filters = ['Annuals', 'Perennials', 'Biennials', 'Vegetables', 'Trees', 'Flowers']
+    const filters = ['Annuals', 'Perennials', 'Biennials', 'Trees', 'Flowers']
     useEffect(() => {
         axios.get(`http://localhost:4001/api/plants?where={"common_name":{"$regex":"${query}","$options":"i"}}&sort={"id":1}&limit=100`) 
         .then( async response => {
