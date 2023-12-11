@@ -14,6 +14,8 @@ function Layout(props: { user: User | undefined | null }) {
   const [loading, setLoading] = useState<boolean>(true);
   const user = props.user;
   const email = user?.email;
+  console.log(user);
+  console.log(email);
   // const name = user?.displayName;
   const photo = String(user?.photoURL ? user.photoURL : "/default_pfp.svg");
 
@@ -28,18 +30,18 @@ function Layout(props: { user: User | undefined | null }) {
   useEffect(() => {
     async function fetchOurUser() {
       if (user) {
-        let userRes = await axios.get(`http://localhost:4001/api/users/${user!.uid}`);
-        await setOurUser(userRes.data.data);
-        setLoading(false);
+        try {
+          let userRes = await axios.get(`http://localhost:4001/api/userstemp/${email}`)
+          setOurUser(userRes.data.data);
+          setLoading(false);
+        } catch (error) {
+          console.log(`error loading user data in layout: ${error}`);
+        }
       }
     }
+    fetchOurUser();
 
-    try {
-      fetchOurUser();
-    } catch(err) {
-      console.log(err);
-    }
-  }, [user])
+  }, [email, user])
 
   if (loading || !ourUser) {
     console.log("Returning loading");

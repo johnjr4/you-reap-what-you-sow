@@ -188,6 +188,18 @@ module.exports = function (router) {
     // users /: id
     // GET
     // Respond with details of specified user or 404 error
+    router.get('/api/userstemp/:email', async (req, res) => {
+        try {
+            const user = await User.findOne({email: req.params.email});
+            if (!user) {
+                return res.status(404).json({ message: 'No user found with matching email', data: "" });
+            }
+            res.json({message: "User found", data: user});
+        } catch (error) {
+            res.status(500).json({ message: 'error in usertemp getting user by email', data: "" });
+        }
+    });
+
     router.get('/api/users/:id', async (req, res) => {
         try {
             const selectFields = req.query.select ? JSON.parse(req.query.select) : {};
@@ -204,33 +216,68 @@ module.exports = function (router) {
     // Replace entire user with supplied user or 404 error
     router.put('/api/users/:id', async (req, res) => {
         try {
-            const userId = req.params.id;
+            const userIdParam = req.params.id;
+            const userIdBody = req.body.id;
             const updatedUserData = req.body;
             const userEmail = req.body.email;
             const userName = req.body.name;
+            const userPurpose = req.headers.purpose;
 
-
-            // First check if there is a user with the same id field (created by firebase)
-            const existingUser = await User.findOne({id: req.params.id});
-            if (existingUser) {
-                return res.status(400).json({message: 'User with this id (firebase) already exists', data: ""})
+            if (userPurpose === 'Initial put') {
+                const user = await User.findOne({email: userEmail, name:userName});
+                if (!user) {
+                    return res.status(404).json({ message: 'User with this name and email not found', data: '' });
+                  }
+                  // Update the user properties
+                  Object.assign(user, updatedUserData);
+                  // Save the updated user
+                  const updatedUser = await user.save();
+                  res.json({ message: 'Updated User', data: updatedUser });                
+            } else {
+                const existingUser = await User.findOne({id: userIdParam});
+                if (!existingUser) {
+                    return res.status(404).json({ message: 'User with this id (firebase) not found', data: '' }); 
+                }
+                Object.assign(existingUser, updatedUserData);
+                const updatedUser = await existingUser.save();
+                res.json({ message: 'Updated User', data: updatedUser });     
             }
 
-            // We know that the user is not in this DB but has been assigned a firebase id, so find by email and username. In this case, the passed req.params.id can be anything
-            const user = await User.findOne({email: userEmail, name: userName});
+            // Check if user's firebase id has been added to the mongodb
+            // const existingUser = await User.findOne({id: userIdParam});
+            // if (existingUser) {
+            //     // The user has already been put into the mongodb with the correct firebase ID. we can let the user make any update desired
+            //     Object.assign(existingUser, updatedUserData);
+            //     const updatedUser = await existingUser.save();
+            //     res.json({ message: 'Updated User', data: updatedUser });
+            // } else {
+            //     // The user has not been put into mongodb with the correct firebase ID,
+            //     // but the user's firebase name and email have been posted into the DB. (Registered but dashboard is still loading)
+            //     const user = await User.findOne({email: userEmail, name:userName});
+            //     if (!user) {
+            //         return res.status(404).json({ message: 'User not found', data: '' });
+            //       }
+              
+            //       // Update the user properties
+            //       Object.assign(user, updatedUserData);
+              
+            //       // Save the updated user
+            //       const updatedUser = await user.save();
+              
+            //       res.json({ message: 'Updated User', data: updatedUser });
+            // }
+            // // Check if the user exists
+            // if (!user) {
+            //   return res.status(404).json({ message: 'User not found', data: '' });
+            // }
         
-            // Check if the user exists
-            if (!user) {
-              return res.status(404).json({ message: 'User not found', data: '' });
-            }
+            // // Update the user properties
+            // Object.assign(user, updatedUserData);
         
-            // Update the user properties
-            Object.assign(user, updatedUserData);
+            // // Save the updated user
+            // const updatedUser = await user.save();
         
-            // Save the updated user
-            const updatedUser = await user.save();
-        
-            res.json({ message: 'Updated User', data: updatedUser });
+            // res.json({ message: 'Updated User', data: updatedUser });
           } catch (error) {
             console.error('Error:', error);
             res.status(500).json({ message: 'Internal Server Error', data: '' });
