@@ -3,9 +3,6 @@
 .Dashboard {
     display: flex;
     flex-direction: column;
-    // height: 100vh; 
-    // justify-content: center;
-    // background-color: rgb(231, 246, 244);
   }
   .Dashboard-top-half {
     flex: 1;
@@ -47,7 +44,6 @@
     display: flex;
     flex-direction: column;
     text-align: left;
-    // justify-content: start;
     align-items: start;
     min-width: 300px;
   }
@@ -63,19 +59,23 @@
   }
   .profile-info-data {
     list-style: none;
-    // padding: 5% 10%;
-    padding: 5% 5%;
-    // min-width: 300px;
-    background-color: $item-color;
-    border-radius: $small-border-radius;
-    li {
-          // font-weight: bold;
-          font-size: large;
-          // padding: 1%;
-          // margin-bottom: 5px;
-      }    
+    padding: 0;
+    margin: 0;
+    div {
+      padding: 6px 10px;
+      margin: 4px;
+      background-color: $item-color;
+      border-radius: $small-border-radius;
+      }
   }
-  
+  .profile-info-name {
+    font-size: 1.15em;
+    font-weight: bold;
+  }
+  .profile-info-email {
+    font-size: 1em;
+  }
+
   .profile-management {
     flex:0.5;
     display: flex;
@@ -107,7 +107,6 @@
   .Reminders-header {
     display: flex;
     flex-direction: row;
-    // margin: ;
     padding: 1%;    
     align-items: center;
   }
@@ -136,7 +135,6 @@
   .MyPlants-container {
     flex: 1;
     padding: 2%;
-    // margin: 10px 20px 20px 20px;
     margin-right: 1%;
     background-color: $container-color;
     border: $black-border;
@@ -225,7 +223,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0 10px 0;
+    margin: 10px 0 0 0;
     padding: 10px;
     background-color: $item-color;
     border-radius: $small-border-radius;
@@ -267,7 +265,6 @@
 .MyPlants-gallery-filters {
     flex: 1;
     margin-left: auto;
-    // margin-right: auto;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -280,7 +277,6 @@
     flex: 1;
     margin: 0 5px;
     background-color: $paper;
-    // color: $background-brown;
     font-size: auto;
     &:active {
         color: white;
@@ -300,8 +296,6 @@
     margin-right: auto;
     list-style-type: none;
     padding: 0;
-
-    // line-height: 0;
 }
 
 .MyPlants-plant-card {
@@ -316,7 +310,6 @@
         width: 100%;
     }
     &:hover {
-        // background-color: green;
         border: $border-width solid $plant-green;
         transition: all 0.1s linear;
         > * {
@@ -328,7 +321,6 @@
         }
         img {
             filter: brightness(40%);
-            // -webkit-filter: brightness(50%);
         }
     }
 }
@@ -372,13 +364,11 @@
   align-items: center;
 }
 .AddPlants-title {
-  // flex:0.5;
   font-size: 1.6em;
   padding: 2%;
   font-weight: bold;
 }
 .AddPlants-by-search {
-  // flex: 1;
   padding: 2% 0;
   display: flex;
   flex-direction: column;
@@ -393,11 +383,9 @@
   align-items: flex-start;
   button {
     min-height: 1.5em;
-    // height: 1.5em;
     font-size: 1em;
     display: flex;
     align-items: center;
-    // padding: 5%;
     margin-bottom: 4px;
     background-color: $item-color;
     border-radius: $small-border-radius;
@@ -405,7 +393,6 @@
     list-style-type: none;
     border: $border-width solid transparent;
     &:hover {
-      // background-color: green;
       border: $border-width solid $plant-green;
       transition: all 0.1s linear;
       > * {
@@ -417,21 +404,17 @@
     text-align: center;
   }
   .add-img {
-    // height: 100%;
     height: 1em;
     margin-right: 4px;
   }
 }
 .AddPlants-by-gallery {
-  // flex: 1;
-  // padding: 2%;
   margin: 0;
   text-decoration: none;
   font-size: large;
   @include darken-hover;
 }
 .AddPlants-link {
-  // background-color: $item-color;
   border-radius: $small-border-radius;
   text-decoration: none;
   color: black;

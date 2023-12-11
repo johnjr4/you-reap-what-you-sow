@@ -123,26 +123,17 @@ function MyProfile(props: { user: User, userObject:UserObject}) {
       <div className="profile-pic">
         <img
           className="profile-pic"
-<<<<<<< HEAD
-          // src={user.photoURL ? user.photoURL : no_img}
-          src={userObj.picture_path ? userObj.picture_path : no_img}
-=======
-          src={user.picture_path ? user.picture_path : '/default_pfp.svg'}
->>>>>>> 4f2904f (Safety commit)
+          src={userObj.picture_path ? userObj.picture_path : '/default_pfp.svg'}
           alt={"Profile"}
           referrerPolicy="no-referrer"
         />
       </div>
       <div className="profile-info">
         <span className="profile-header">My Profile </span>
-        <ul className="profile-info-data">
-<<<<<<< HEAD
-          <li>{userObj.name}</li>
-=======
-          <li>{user.name}</li>
->>>>>>> 4f2904f (Safety commit)
-          <li>{user.email}</li>
-        </ul>
+        <div className="profile-info-data">
+          <div className="profile-info-name">{userObj.name}</div>
+          <div className="profile-info-email">{user.email}</div>
+        </div>
       </div>
       {/* <div className='profile-management'>
                 <button className='buttons'>Edit Profile</button>
@@ -467,8 +458,7 @@ function AddPlants({userObject, setUserObject}) {
   });
 
   function isAdded(p) {
-    console.log(p.item.id);
-    return userObject.plants.find(o => Number(o.id) === Number(p.item.id)) !== undefined
+    return userObject.plants.find(o => Number(o) === Number(p.item.id)) !== undefined
   }
   
   if (isLoading) {
@@ -500,9 +490,9 @@ function AddPlants({userObject, setUserObject}) {
                                         <img
                                           className='add-img'
                                           src={isAdded(p) ? 
-                                            '/add_plus.svg'
-                                            :
                                             '/add_check.svg'
+                                            :
+                                            '/add_plus.svg'
                                           }/>
                                         <label>{p.item.common_name}</label>
                                       </button>
